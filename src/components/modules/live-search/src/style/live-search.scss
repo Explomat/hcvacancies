@@ -1,0 +1,115 @@
+@import '../../../text-label/src/style/text-label';
+
+.live-search {
+    position: relative;
+    margin: -1px 0 -1px -1px;
+    font-size: inherit;
+
+    .live-search__container {
+        position: relative;
+
+        .live-search__search-box{
+            position: relative;
+            @include input-box;
+
+            .live-search__input{
+                @include input-box__input;
+
+                outline: 0;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+            .live-search__label {
+                @include input-box__label;
+                transition-delay: .1s;
+
+                &.live-search__label--detranslate {
+                    transform: translateY(0px);
+                }
+            }
+
+            .live-search__caret{
+                position: absolute;
+                right: 0;
+                top: calc(50% - 2px);
+                color: #444;
+            }
+
+            .live-search__input:focus + .live-search__label,
+            .live-search__input_not-empty + .live-search__label {
+                color: $darkPrimaryColor;
+                font-size: $fontSizeXs;
+                font-weight: bold;
+                transform: translateY(-25px);
+            }
+        }
+        
+        .live-search__drop {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+
+            .live-search__content {
+                position: absolute;
+                top: 10px;
+                z-index: 4000;
+                overflow: hidden;
+                background-clip: padding-box;
+                background-color: #fff;
+                opacity: 0;
+                -webkit-transform: translateY(10px);
+                -ms-transform: translateY(10px);
+                transform: translateY(10px);
+                visibility: hidden;
+                transition-property: opacity,-webkit-transform,visibility;
+                transition-property: opacity,transform,visibility;
+                transition-duration: .15s;
+                box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 10px 20px -5px rgba(0, 0, 0, 0.4);
+
+                &.live-search__content--visible{
+                    opacity: 1;
+                    -webkit-transform: none;
+                    -ms-transform: none;
+                    transform: none;
+                    visibility: visible;
+                }
+
+                .live-search__items {
+                    margin: 0;
+                    padding: 0;
+
+                    .live-search__item {
+                        font: 13px/20px Arial,sans-serif;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        margin: 0 -10px;
+                        padding: 0 20px;
+                        color: rgba(0,0,0,.4);
+                        cursor: pointer;
+                        list-style-type: none;
+                        line-height: 20px;
+
+                        &:hover {
+                            background-color: #efefef;
+                        }
+
+                        .live-search__item-name {
+                            font-size: 15px;
+                            color: #000;
+                            margin: 0 .25em 0 0;
+                        }
+
+                        .live-search__item-description{
+                            line-height: 1em;
+                            color: #7d7d7d;
+                            margin-bottom: 8px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

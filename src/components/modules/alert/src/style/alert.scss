@@ -1,0 +1,32 @@
+@import '../../../vars.scss';
+
+.alert {
+    padding: 8px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    display: inline-block;
+
+    &.alert--success {
+        color: darken($alert-success-color, 60%);
+        background-color: $alert-success-color;
+        border-color: darken($alert-success-color, 10%);
+    }
+
+    &.alert--info {
+        color: darken($alert-info-color, 60%);
+        background-color: $alert-info-color;
+        border-color: darken($alert-info-color, 10%);
+    }
+
+    &.alert--warning {
+        color: darken($alert-warning-color, 60%);
+        background-color: $alert-warning-color;
+        border-color: darken($alert-warning-color, 10%);
+    }
+
+    &.alert--danger {
+        color: darken($alert-danger-color, 60%);
+        background-color: $alert-danger-color;
+        border-color: darken($alert-danger-color, 10%);
+    } 
+}

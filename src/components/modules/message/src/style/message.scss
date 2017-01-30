@@ -1,0 +1,117 @@
+@import '../../../modal/src/style/modal';
+
+.message {
+    @include modal-box;
+    display: block;
+
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(91, 91, 91, 0.26);
+    z-index: 100;
+    top: 0;
+
+    .message__modal-box {
+        @include modal-box__dialog;
+
+        margin: 10px auto;
+        position: absolute;
+        top: 10%;
+        left: 10%;
+        width: 80%;
+        z-index: 3;
+
+        .message__content {
+            @include modal-box__content;
+            .message__header{
+                @include modal-box__header;
+            }
+            .message__body{
+                @include modal-box__body;
+                height: 400px;
+                overflow: auto;
+
+                .message__text-wrapper {
+                    width: 55%;
+                    float: left;
+
+                    .message__subject{
+                        margin-bottom: 12px;
+                    }
+                }
+                .message__items{
+                    width: 40%;
+                    float: right;
+                    height: 100%;
+                    border: 1px solid #ccc;
+
+                    .message__items-selected, .message__items-not-selected{
+                        height: 50%;
+                        padding: 8px;
+                        overflow-y: auto;
+                        overflow-x: hidden;
+                        width: 100%;
+
+                        &.message__items-selected--hide, &.message__items-not-selected--hide {
+                            display: none;
+                        }
+
+                        &.message__items-selected--100, &.message__items-not-selected--100 {
+                            height: 100%;
+                        }
+
+                        .selected-item {
+                            padding: 4px 0;
+                            width: 100%;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            white-space: nowrap;
+                            cursor: pointer;
+
+                            &:hover {
+                                background-color: #f2f2f2;
+                            }
+                            
+                            .selected-item__button{
+                                font-size: 10px;
+                            }
+
+                            .selected-item__fullname{
+                                margin-left: 8px
+                            }
+                        }
+
+                        .not-selected-item {
+                            padding: 4px 0;
+                            width: 100%;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            white-space: nowrap;
+                            cursor: pointer;
+
+                            &:hover {
+                                background-color: #f2f2f2;
+                            }
+
+                            .not-selected-item__button{
+                                font-size: 10px;
+                            }
+                            
+                            .not-selected-item__fullname{
+                                margin-left: 8px
+                            }
+                        }
+                    }
+                    .message__d{
+                        color: #646464;
+                        margin-bottom: 8px;
+                        display: inline-block;
+                    }
+                }
+            }
+            .message__footer{
+                @include modal-box__footer;
+            }
+        }
+    }
+}

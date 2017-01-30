@@ -1,0 +1,23 @@
+.search-box {
+	display: inline-block;
+    position: relative;
+    vertical-align: middle;
+
+    .search-box__search-input {
+        height: 29px;
+        line-height: 29px;
+        padding: 0px 15px 0px 30px;
+        border: 1px solid #B6B6B6;
+        background-color: transparent;
+        border-radius: 1px;
+        outline: none;
+        font-size: inherit;
+    }
+    .search-box__search-icon {
+        position: absolute;
+        left: 8px;
+        color: #b6b6b6;
+        top: 50%;
+        transform:translateY(-50%);
+    }
+}

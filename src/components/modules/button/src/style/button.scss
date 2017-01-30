@@ -1,0 +1,99 @@
+@import '../../../vars.scss';
+
+.button-default {
+    display: inline-block;
+    padding: .5em;
+    background-image: linear-gradient(#fff, #ddd);
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    text-align: center;
+    cursor: pointer;
+    outline: 0;
+    vertical-align: middle;
+
+    &:after {
+        content: '';
+        display: inline-block;
+        width: 0;
+        height: 100%;
+        vertical-align: middle;
+    }
+
+    &:active {
+        background: linear-gradient(#ddd, #fff);
+    }
+
+    &.button-default--disabled {
+        background-color: #bababa !important;
+        border: 1px solid darken(#bababa, 10%) !important;
+    }
+
+    &.button-default--selected{
+        background: linear-gradient(#f2f2f2, #a0a0a0);
+    }
+
+    &.button-default--primary {
+        background-image: none;
+        background-color: $button-primary-color;
+        border: 1px solid darken($button-primary-color, 10%);
+        color: #fff;
+
+        &.button-default--primary--reverse {
+            background-color: #fff;
+            border: 1px solid darken($button-primary-color, 10%);
+            color: $button-primary-color;
+        }
+    }
+
+    &.button-default--success {
+        background-image: none;
+        background-color: $button-success-color;
+        border: 1px solid darken($button-success-color, 10%);
+        color: #fff;
+
+        &.button-default--success--reverse {
+            background-color: #fff;
+            border: 1px solid darken($button-success-color, 10%);
+            color: $button-success-color;
+        }
+    }
+
+    &.button-default--info {
+        background-image: none;
+        background-color: $button-info-color;
+        border: 1px solid darken($button-info-color, 10%);
+        color: #fff;
+
+        &.button-default--info--reverse {
+            background-color: #fff;
+            border: 1px solid darken($button-info-color, 10%);
+            color: $button-info-color;
+        }
+    }
+
+    &.button-default--warning {
+        background-image: none;
+        background-color: $button-warning-color;
+        border: 1px solid darken($button-warning-color, 10%);
+        color: #fff;
+
+        &.button-default--warning--reverse {
+            background-color: #fff;
+            border: 1px solid darken($button-warning-color, 10%);
+            color: $button-warning-color;
+        }
+    }
+
+    &.button-default--danger {
+        background-image: none;
+        background-color: $button-danger-color;
+        border: 1px solid darken($button-danger-color, 10%);
+        color: #fff;
+
+        &.button-default--danger--reverse {
+            background-color: #fff;
+            border: 1px solid darken($button-danger-color, 10%);
+            color: $button-danger-color;
+        }
+    }
+}

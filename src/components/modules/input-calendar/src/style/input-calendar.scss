@@ -1,0 +1,29 @@
+.input-calendar {
+  width: 100%;
+  font-size: 13px;
+  position: relative;
+
+  .input-calendar__date {
+    width: 100%;
+    padding: 4px;
+  }
+
+  .input-calendar__icon{
+    position: absolute;
+    right: 0;
+    bottom: 8px;
+    color: #444;
+  }
+
+  .input-calendar__calendar{
+    display: none;
+    z-index: 1;
+
+    &.input-calendar__calendar--show {
+      display: block;
+      position: absolute;
+      background-color: #fff;
+      z-index: 10;
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "input-calendar",
+
+  "externalViews": {
+    "InputMoment": "../../input-moment"
+  },
+
+  "dependencies": {
+    "react-onclickoutside": "^4.5.0",
+    "classnames": "^2.2.0"
+  }
+}

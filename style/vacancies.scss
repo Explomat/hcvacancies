@@ -1,0 +1,68 @@
+.vacancies-container{
+	.vacancies-container__header{
+		margin-bottom: 16px;
+		
+		.vacancies-container__filters{
+			.vacancies-container__search-bar-container {
+				display: inline-block;
+				margin-right: 48px;
+				
+				.vacancies-container__search-bar{
+					margin-right: 8px;
+				}
+				.vacancies-container__vacancys-count{
+					color: #999;
+				}
+			}
+			
+			.vacancies-container__filter-status{
+				margin-right: 16px;
+			}
+			.vacancies-container__sort{
+				
+			}
+		}
+	}
+	.vacancies-container__body{
+		.vacancies{
+			.vacancies__vacancy{
+				padding: 8px 0px;
+				border-bottom: 1px solid #ccc;
+				
+				.vacancies__link{
+					display: block;
+					padding: 0 8px;
+					border-left: 2px solid transparent;
+					
+					&:hover{
+						border-left: 2px solid #19c78b;
+					}
+					
+					.vacancies__title{
+						margin-bottom: 4px;
+					    font-size: 1.5em;
+					    color: #444;
+					}
+				}
+				.vacancies__status, .vacancies__date{
+					font-size: 14px;
+    				color: #999;
+				}
+				.vacancies__additional{
+					float: right;
+					font-size: 14px;
+    				color: #999;
+    				
+					.vacancies__candidates-count{
+						.vacancies__candidates-icon{
+							margin-right: 2px;
+						}
+					}
+					.vacancies__comments-count{
+						margin-left: 4px;
+					}
+				}
+			}
+		}
+	}
+}

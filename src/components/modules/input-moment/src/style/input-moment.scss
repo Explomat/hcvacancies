@@ -1,0 +1,77 @@
+@import 'variables';
+@import 'calendar';
+@import 'time';
+@import 'slider';
+
+.im-btn {
+  display: inline-block;
+  background-color: #ffffff;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  line-height: 1;
+  font-family: FontAwesome, sans-serif;
+
+  &:before {
+    margin-right: 6px;
+  }
+}
+
+.m-input-moment {
+  display: inline-block;
+  width: 220px;
+  padding: 6px 8px;
+  border: 1px solid $color-gray;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.1),0 10px 20px -5px rgba(0,0,0,.4);
+  
+  .options {
+    width: 100%;
+    display: inline-block;
+    margin-bottom: 4px;
+
+    button {
+      float: left;
+      width: 50%;
+      color: $color-gray-dark;
+      text-align: center;
+      font-size: 14px;
+      padding: 5px;
+      border: 1px solid $color-gray-dark;
+
+      /* &:first-child {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      &:last-child {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      } */
+
+      &.is-active {
+        color: #ffffff;
+        background-color: $color-gray-dark;
+      }
+    }
+  }
+
+  .tab {
+    display: none;
+    height: 230px;
+
+    &.is-active {
+      display: block;
+    }
+  }
+
+  .btn-save {
+    display: block;
+    margin-top: 10px;
+    width: 100%;
+    background-color: $color-red;
+    padding: 7px 0;
+    text-align: center;
+    color: #ffffff;
+    font-size: 16px;
+  }
+}

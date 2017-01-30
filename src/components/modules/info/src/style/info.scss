@@ -1,0 +1,56 @@
+@import '../../../modal/src/style/modal';
+
+.info {
+    @include modal-box;
+    display: block;
+
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(91, 91, 91, 0.26);
+    z-index: 100;
+    top: 0;
+
+    .info__modal-box {
+        @include modal-box__dialog;
+        
+        margin: 10px auto;
+        position: absolute;
+        top: 10%;
+        left: 35%;
+        width: 30%;
+        z-index: 3;
+
+        .info__content {
+            @include modal-box__content;
+            border-radius: 0px;
+            .info__body{
+                @include modal-box__body;
+                height: auto;
+                overflow: auto;
+
+                .info__message{
+                    padding: 16px 32px;
+                    color: #000;
+                }
+                .info__button{
+                    margin-left: 31px;
+                }
+                .info__icon{
+                    position: absolute;
+                    top: 30px;
+                    font-size: 1.2rem;
+                    &.info__icon--error{
+                        color: red;
+                    }
+                    &.info__icon--info{
+                        color: yellow;
+                    }
+                    &.info__icon--done{
+                        color: green;
+                    }
+                }
+            }
+        }
+    }
+}
