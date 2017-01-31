@@ -14,6 +14,7 @@ export default function vacancy(state = {
 	id: null,
 	title: '',
 	status: '',
+	date: '',
 	comments: [],
 	candidates: [],
 	isFetching: false

@@ -112,7 +112,7 @@
         "no-this-before-super": 0,
         "no-var": 2,
         "object-shorthand": [2, "always"],
-        "prefer-arrow-callback": 2,
+        "prefer-arrow-callback": 0,
         "prefer-const": 2,
         "prefer-spread": 2,
         "prefer-template": 0,
@@ -198,7 +198,7 @@
         "react/jsx-indent": [2, "tab"],
         "react/jsx-key": 2,
         "react/jsx-max-props-per-line": [2, {maximum: 3}],
-        "react/jsx-no-bind": [2, {
+        "react/jsx-no-bind": [0, {
             "ignoreRefs": true,
             "allowBind": true,
             "allowArrowFunctions": true
@@ -217,7 +217,7 @@
         "react/no-multi-comp": 0,
         "react/no-string-refs": 0,
         "react/no-unknown-property": 2,
-        "react/prefer-es6-class": 2,
+        "react/prefer-es6-class": 0,
         "react/prop-types": 0,
         "react/react-in-jsx-scope": 2,
         "react/self-closing-comp": 2,

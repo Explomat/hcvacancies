@@ -79,7 +79,26 @@ export function getMockVacancies(){
 }
 
 export function getMockVacancy(vacancyId){
-	return vacancies.filter(v => v.id.toString() === vacancyId.toString())[0];
+	const vacancy = vacancies.filter(v => v.id.toString() === vacancyId.toString())[0];
+	if (vacancy){
+		const candidates = vacancy.candidates.map(c => {
+			return {
+				id: c.id,
+				fullname: c.fullname,
+				dateResponse: c.dateResponse,
+				dateInterview: c.dateInterview,
+				dateInvitation: c.dateInvitation,
+				commentsCount: c.comments.length
+			};
+		});
+		return {
+			id: vacancy.id,
+			title: vacancy.title,
+			status: vacancy.status,
+			date: vacancy.date,
+			candidates
+		};
+	}
 }
 
 export function getMockCandidate(vacancyId, candidateId){

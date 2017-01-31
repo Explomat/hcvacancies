@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import formatDate from '../utils/formatDate';
 
-const Vacancy = ({ id, title, status, date, candidatesCount, commentsCount }) => {
+const Vacancy = ({ id, title, status, date, candidatesCount }) => {
 	return (
 		<div className='vacancies__vacancy'>
 			<Link to={`vacancy/${id}`} className='no-link vacancies__link'>
 				<div className='vacancies__title'>{title}</div>
 				<span className='vacancies__status'>{status}</span>
 				<span className='bullet'>•</span>
-				<span className='vacancies__date'>{date.toLocaleDateString()}</span>
+				<span className='vacancies__date'>{formatDate(date)}</span>
 				<span className='vacancies__additional'>
 					<span className='vacancies__candidates-count'>
 						<i className='icon-user vacancies__candidates-icon' />
 						<span>{candidatesCount}</span>
 					</span>
-					<span className='vacancies__comments-count'>{commentsCount}</span>
 				</span>
 			</Link>
 		</div>

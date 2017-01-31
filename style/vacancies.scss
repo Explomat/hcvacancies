@@ -36,12 +36,14 @@
 					
 					&:hover{
 						border-left: 2px solid #19c78b;
+						background-color: rgba(25, 199, 139, 0.1);
 					}
 					
 					.vacancies__title{
 						margin-bottom: 4px;
 					    font-size: 1.5em;
 					    color: #444;
+					    word-break: break-all;
 					}
 				}
 				.vacancies__status, .vacancies__date{
@@ -56,10 +58,15 @@
 					.vacancies__candidates-count{
 						.vacancies__candidates-icon{
 							margin-right: 2px;
+							color: rgb(65, 131, 196);
 						}
 					}
 					.vacancies__comments-count{
-						margin-left: 4px;
+						margin-left: 8px;
+						.vacancies__comments-icon{
+							margin-right: 2px;
+							color: rgb(65, 131, 196);
+						}
 					}
 				}
 			}
