@@ -1,7 +1,66 @@
 import numberToWords from 'number-to-words';
+import filter from 'lodash/filter';
+// import indexOf from 'lodash/indexOf';
 
-function getRandomArbitrary(min, max) {
+const limitRows = 15;
+
+/* function getRandomArbitrary(min, max) {
 	return Math.random() * (max - min) + min;
+}*/
+
+function filterVacancies(vacancies, search, page, status, orderedByTitle, orderedByStatus){
+	const newVacancies = filter(vacancies, v => {
+		return (~v.title.indexOf(search) && (v.status === status || status === 'all'));
+	});
+	const sortVacancies = !orderedByTitle ? newVacancies :
+	newVacancies.sort((f, s) => {
+		if (f.title < s.title){
+			return -1;
+		}
+		if (f.title > s.title){
+			return 1;
+		}
+		return 0;
+	});
+	const sortVacancies2 = !orderedByStatus ? sortVacancies :
+	sortVacancies.sort((f, s) => {
+		if (f.status < s.status){
+			return -1;
+		}
+		if (f.status > s.status){
+			return 1;
+		}
+		return 0;
+	});
+	const sliceVacancies = sortVacancies2.slice((page * limitRows), (page * limitRows + limitRows));
+	
+	
+	/* return filter(vacancies, v => {
+		return (~indexOf(v, search) && v.status === status);
+	}).slice((page * limitRows), (page * limitRows + limitRows))
+	.sort((f, s) => {
+		if (orderedByTitle){
+			if (f.title < s.title){
+				return -1;
+			}
+			if (f.title > s.title){
+				return 1;
+			}
+		}
+		return 0;
+	})
+	.sort((f, s) => {
+		if (orderedByStatus){
+			if (f.status < s.status){
+				return -1;
+			}
+			if (f.status > s.status){
+				return 1;
+			}
+		}
+		return 0;
+	});*/
+	return sliceVacancies;
 }
 
 function mockVacancies(){
@@ -16,28 +75,34 @@ function mockVacancies(){
 	}
 	
 	const outVacancies = [];
-	const vacanciesCount = getRandomArbitrary(1, 100);
+	const vacanciesCount = 5;
 
 	for (let i = 0; i < vacanciesCount; i++) {
 		const candidates = [];
 		const comments = [];
-		const vacancyCommentsCount = getRandomArbitrary(0, 5);
-		const candidatesCount = getRandomArbitrary(0, 5);
+		const vacancyCommentsCount = 5;
+		const candidatesCount = 4;
 		
 		for (let j = 0; j < candidatesCount; j++) {
 			const candidateComments = [];
-			const candidateCommentsCount = getRandomArbitrary(0, 5);
+			const candidateCommentsCount = 6;
 			
 			for (let jj = 0; jj < candidateCommentsCount; jj++){
 				candidateComments.push({
 					id: jj,
 					fullname: 'Fullname who pass a comment',
-					comment: `Comment for candidate ${j}`
+					comment: `Comment for candidate ${j}\r\n
+						Comment for candidate ${j}\r\nComment for candidate ${j}
+						Comment for candidate ${j}\r\n\Comment for candidate ${j}\r\n\Comment for candidate ${j}
+						Comment for candidate ${j}\r\n\Comment for candidate ${j}\r\n\Comment for candidate ${j}
+						Comment for candidate ${j}\r\n\Comment for candidate ${j}\r\n\Comment for candidate ${j}
+						Comment for candidate ${j}\r\n\Comment for candidate ${j}\r\n\Comment for candidate ${j}`
 				});
 			}
 			candidates.push({
 				id: j,
 				fullname: `Candidate ${i}/${j}`,
+				cvPath: '#',
 				dateResponse: new Date(),
 				dateInterview: new Date(),
 				dateInvitation: new Date(),
@@ -53,7 +118,7 @@ function mockVacancies(){
 		}
 		outVacancies.push({
 			id: i,
-			title: numberToWords.toWords(i),
+			title: `Vacancy ${numberToWords.toWords(i)}`,
 			status: getStatus(i),
 			date: new Date(),
 			candidates,
@@ -65,8 +130,8 @@ function mockVacancies(){
 
 const vacancies = mockVacancies();
 
-export function getMockVacancies(){
-	return vacancies.map(v => {
+export function getMockVacancies(search, page, status, orderedByTitle, orderedByStatus){
+	return filterVacancies(vacancies, search, page, status, orderedByTitle, orderedByStatus).map(v => {
 		return {
 			id: v.id,
 			title: v.title,
@@ -85,6 +150,7 @@ export function getMockVacancy(vacancyId){
 			return {
 				id: c.id,
 				fullname: c.fullname,
+				cvPath: c.cvPath,
 				dateResponse: c.dateResponse,
 				dateInterview: c.dateInterview,
 				dateInvitation: c.dateInvitation,

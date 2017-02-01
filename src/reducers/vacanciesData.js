@@ -7,13 +7,30 @@ function isFetchingVacancies(state = false, action){
 	if (type === constants.VACANCIES_GET_VACANCIES){
 		return true;
 	}
-	return state;
+	return false;
 }
 
 function receiveVacancies(state = [], action){
 	const { type } = action;
 	if (type === constants.VACANCIES_GET_VACANCIES_SUCCESS){
-		return assign([], state, action.response);
+		return assign([], action.response);
+	}
+	return state;
+}
+
+function isFetchingVacanciesScroll(state = false, action){
+	const { type } = action;
+	
+	if (type === constants.VACANCIES_GET_VACANCIES_ON_SCROLL){
+		return true;
+	}
+	return false;
+}
+
+function receiveVacanciesOnScroll(state = [], action){
+	const { type } = action;
+	if (type === constants.VACANCIES_GET_VACANCIES_ON_SCROLL_SUCCESS){
+		return state.concat(action.response);
 	}
 	return state;
 }
@@ -21,8 +38,10 @@ function receiveVacancies(state = [], action){
 export default function vacanciesData(state = {
 	vacancies: [],
 	isFetching: false,
+	isFetchingScroll: false,
 	search: '',
-	page: 1,
+	page: 0,
+	pagesCount: 7,
 	statusFilter: {
 		filters: [
 			{ payload: 'all', text: 'Все вакансии' },
@@ -32,7 +51,7 @@ export default function vacanciesData(state = {
 		],
 		selected: 'all'
 	},
-	orderedByTitle: true,
+	orderedByTitle: false,
 	orderedByStatus: false
 					
 }, action) {
@@ -41,7 +60,34 @@ export default function vacanciesData(state = {
 		case constants.VACANCIES_GET_VACANCIES_SUCCESS: {
 			return assign({}, state, {
 				vacancies: receiveVacancies(state.vacancies, action),
-				isFetching: isFetchingVacancies(state.isFetching, action)
+				isFetching: isFetchingVacancies(state.isFetching, action),
+				orderedByTitle: action.orderedByTitle,
+				orderedByStatus: action.orderedByStatus
+			});
+		}
+		
+		case constants.VACANCIES_CHANGE_STATUS:
+		case constants.VACANCIES_CHANGE_STATUS_SUCCESS: {
+			return assign({}, state, {
+				vacancies: receiveVacancies(state.vacancies, action),
+				statusFilter: {
+					filters: [
+						{ payload: 'all', text: 'Все вакансии' },
+						{ payload: 'opened', text: 'Открытые' },
+						{ payload: 'closed', text: 'Закрытые' },
+						{ payload: 'active', text: 'В работе' }
+					],
+					selected: action.status || state.status
+				}
+			});
+		}
+		
+		case constants.VACANCIES_GET_VACANCIES_ON_SCROLL:
+		case constants.VACANCIES_GET_VACANCIES_ON_SCROLL_SUCCESS: {
+			return assign({}, state, {
+				vacancies: receiveVacanciesOnScroll(state.vacancies, action),
+				isFetchingScroll: isFetchingVacanciesScroll(state.isFetchingScroll, action),
+				page: action.page
 			});
 		}
 

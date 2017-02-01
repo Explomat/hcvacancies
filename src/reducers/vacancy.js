@@ -7,7 +7,7 @@ function isFetchingVacancies(state = false, action){
 	if (type === constants.VACANCIES_GET_VACANCY){
 		return true;
 	}
-	return state;
+	return false;
 }
 
 export default function vacancy(state = {

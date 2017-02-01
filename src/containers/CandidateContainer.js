@@ -11,8 +11,9 @@ class CandidateContainer extends Component {
 	}
 	
 	render(){
+		const { isFetching } = this.props;
 		return (
-			<Candidate {...this.props}/>
+			isFetching ? <h1>Loading...</h1> : <Candidate {...this.props}/>
 		);
 	}
 }

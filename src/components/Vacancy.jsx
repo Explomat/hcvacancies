@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import numDeclension from '../utils/numDeclension';
-import formatDate from '../utils/formatDate';
+import getDate from '../utils/getDate';
 
 const Candidate = ({ id, vacancyId, fullname, dateResponse, dateInterview, dateInvitation, commentsCount }) => {
 	return (
@@ -10,9 +10,9 @@ const Candidate = ({ id, vacancyId, fullname, dateResponse, dateInterview, dateI
 				<i className='icon-user vacancy__candidate-icon' />
 				<div className='vacancy__candidate-fullname'>{fullname}</div>
 				<span className='vacancy__candidate-dates'>
-					<span>{formatDate(dateResponse)}</span>&nbsp;/&nbsp;
-					<span>{formatDate(dateInterview)}</span>&nbsp;/&nbsp;
-					<span>{formatDate(dateInvitation)}</span>
+					<span>{getDate(dateResponse)}</span>&nbsp;/&nbsp;
+					<span>{getDate(dateInterview)}</span>&nbsp;/&nbsp;
+					<span>{getDate(dateInvitation)}</span>
 				</span>
 				<div className='vacancy__candidate-additional'>
 					<i className='icon-comment vacancy__candidate-additional-comment-icon'/>
@@ -34,7 +34,7 @@ class Vacancy extends Component {
 					<span className='vacancy__field-label'>Статус</span>
 					<span className='vacancy__field-value'>{status}</span>
 					<span className='vacancy__field-label'>Дата создания</span>
-					<span className='vacancy__field-value'>{formatDate(date)}</span>
+					<span className='vacancy__field-value'>{getDate(date)}</span>
 				</div>
 				<div className='vacancy__candidates'>
 					<div className='vacancy__candidates-title'>

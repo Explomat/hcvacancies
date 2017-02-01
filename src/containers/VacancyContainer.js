@@ -11,8 +11,9 @@ class VacancyContainer extends Component {
 	}
 	
 	render(){
+		const { isFetching } = this.props;
 		return (
-			<Vacancy {...this.props}/>
+			isFetching ? <h1>Loading...</h1> : <Vacancy {...this.props}/>
 		);
 	}
 }

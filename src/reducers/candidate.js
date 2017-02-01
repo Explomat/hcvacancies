@@ -7,12 +7,13 @@ function isFetchingCandidate(state = false, action){
 	if (type === constants.CANDIDATE_GET_CANDIDATE){
 		return true;
 	}
-	return state;
+	return false;
 }
 
 export default function vacancy(state = {
 	id: null,
 	fullname: '',
+	cvPath: '#',
 	dateResponse: '',
 	dateInterview: '',
 	dateInvitation: '',

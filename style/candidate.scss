@@ -31,7 +31,41 @@
 	}
 	.candidate__comments{
 		.comment {
-			
+			background-color: #edeef2;
+    		padding: 12px;
+    		margin-bottom: 12px;
+    		
+			.comment__avatar{
+				font-size: 1.5em;
+			    float: left;
+			    margin-right: 2px;
+			    margin-left: -12px;
+			    color: #4183c4;
+			    line-height: 1px;
+			}
+			.comment__post{
+				.comment__post-header{
+				    line-height: 1;
+				    font-size: 13px;
+				    padding-right: 46px;
+				    margin-bottom: 8px;
+    				
+    				.comment__post-author{
+    					color: #656c7a;
+    					font-weight: 700;
+    				}
+				}
+				.comment__post-body{
+					font-size: 15px;
+					
+					position: relative;
+				    overflow: hidden;
+				    zoom: 1;
+				    width: 100%;
+				    padding-left: 24px;
+				    color: #2a2e2e;
+				}
+			}
 		}
 	}
 }

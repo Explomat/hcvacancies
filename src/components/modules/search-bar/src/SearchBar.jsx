@@ -6,6 +6,8 @@ class SearchBar extends React.Component {
 	constructor(props){
 		super(props);
 		
+		this.handleChange = this.handleChange.bind(this);
+		this.handleSearch = this.handleSearch.bind(this);
 		this.state = {
 			value: props.value || ''
 		};
