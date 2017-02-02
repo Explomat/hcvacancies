@@ -5,6 +5,7 @@ import DropDown from '../components/modules/dropdown';
 import { DropDownIcon, DropDownIconItem } from '../components/modules/dropdown-icon';
 import * as actionCreators from '../actions';
 import { connect } from 'react-redux';
+import cx from 'classnames';
 
 class VacanciesContainer extends Component {
 	
@@ -16,17 +17,25 @@ class VacanciesContainer extends Component {
 		this.handleSortByTitle = this.handleSortByTitle.bind(this);
 		this.handleSortByStatus = this.handleSortByStatus.bind(this);
 		this._getVacancies = this._getVacancies.bind(this);
+		
 		this._srollDown = this._srollDown.bind(this);
+		this._toggleUpIcon = this._toggleUpIcon.bind(this);
+		
+		this.state = {
+			showUpIcon: false
+		};
 	}
 	
 	componentDidMount(){
 		const { search, statusFilter, orderedByTitle, orderedByStatus } = this.props;
 		this._getVacancies(search, 0, statusFilter.selected, orderedByTitle, orderedByStatus);
 		window.addEventListener('scroll', this._srollDown);
+		window.addEventListener('scroll', this._toggleUpIcon);
 	}
 	
 	componentWillUnmount(){
 		window.removeEventListener('scroll', this._srollDown);
+		window.removeEventListener('scroll', this._toggleUpIcon);
 	}
 	
 	handleSearch(val){
@@ -49,6 +58,12 @@ class VacanciesContainer extends Component {
 		this._getVacancies(search, 0, statusFilter.selected, orderedByTitle, payload);
 	}
 	
+	_toggleUpIcon() {
+		this.setState({
+			showUpIcon: window.pageYOffset > document.documentElement.clientHeight
+		});
+	}
+	
 	_srollDown(){
 		const scrollHeight = document.documentElement.scrollHeight;
 		const clientHeight = document.documentElement.clientHeight;
@@ -67,8 +82,21 @@ class VacanciesContainer extends Component {
 	render(){
 		const { isFetching, isFetchingScroll, count } = this.props;
 		const { search, statusFilter } = this.props;
+		const upIconClasses = cx({
+			'vacancies-container__up-icon': true,
+			'vacancies-container__up-icon--show': this.state.showUpIcon
+		});
 		return (
 			<div className='vacancies-container'>
+				<span
+					ref='iconTop'
+					className={upIconClasses}
+					onClick={() => {
+						window.scrollTo(0, 0);
+					}}
+				>
+					<i className='icon-up-open-2' />
+				</span>
 				<div className='vacancies-container__header'>
 					<div className='vacancies-container__filters'>
 						<div className='vacancies-container__search-bar-container'>

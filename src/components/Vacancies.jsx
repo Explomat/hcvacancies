@@ -38,6 +38,7 @@ class Vacancy extends Component {
 class Vacancies extends Component {
 	render(){
 		const { vacancies } = this.props;
+		
 		return (
 			<div className='vacancies'>
 				{vacancies.map(v => <Vacancy key={v.id} {...v} />)}
