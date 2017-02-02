@@ -1,4 +1,4 @@
-import numberToWords from 'number-to-words';
+// import numberToWords from 'number-to-words';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 // import indexOf from 'lodash/indexOf';
@@ -90,20 +90,18 @@ function mockVacancies(){
 			for (let jj = 0; jj < candidateCommentsCount; jj++){
 				candidateComments.push({
 					id: jj,
-					fullname: 'Fullname who pass a comment',
+					fullname: 'ФИО кто оставил комментарий',
 					date: new Date(),
-					comment: `Comment for candidate ${j}\r\n
-						Comment for candidate ${j}\r\nComment for candidate ${j}
-						Comment for candidate ${j}\r\nComment for candidate ${j}\r\nComment for candidate ${j}
-						Comment for candidate ${j}\r\nComment for candidate ${j}\r\nComment for candidate ${j}
-						Comment for candidate ${j}\r\nComment for candidate ${j}\r\nComment for candidate ${j}
-						Comment for candidate ${j}\r\nComment for candidate ${j}\r\nComment for candidate ${j}`
+					comment: `Lorem ipsum dolor sit amet, 
+					consectetur adipiscing elit. 
+					Donec commodo, est id lobortis gravida, 
+					diam diam hendrerit purus, at consectetur ligula metus sit amet felis.`
 				});
 			}
 			
 			candidates.push({
 				id: j,
-				fullname: `Candidate ${i}/${j}`,
+				fullname: `Кандидат ${i}/${j}`,
 				status: getStatus(j),
 				cvPath: '#',
 				dateResponse: new Date(),
@@ -121,13 +119,13 @@ function mockVacancies(){
 		for (let k = 0; k < vacancyCommentsCount; k++) {
 			comments.push({
 				id: k,
-				fullname: `Who comment ${i}/${k}`,
+				fullname: `ФИО кто оставил комментарий ${i}/${k}`,
 				comment: 'Comment'
 			});
 		}
 		outVacancies.push({
 			id: i,
-			title: `Vacancy ${numberToWords.toWords(i)}`,
+			title: `Вакансия ${i}`,
 			status: getStatus(i),
 			date: new Date(),
 			candidates,
