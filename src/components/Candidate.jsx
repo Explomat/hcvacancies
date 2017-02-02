@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { TextAreaView } from './modules/text-label';
 import getDate from '../utils/getDate';
 
-const Comment = ({ fullname, comment }) => {
+const Comment = ({ fullname, date, comment }) => {
 	return (
 		<div className='comment'>
 			<div className='comment__avatar'>
@@ -10,7 +10,9 @@ const Comment = ({ fullname, comment }) => {
 			</div>
 			<div className='comment__post'>
 				<div className='comment__post-header'>
-					<div className='comment__post-author'>{fullname}</div>
+					<span className='comment__post-author'>{fullname}</span>
+					<span className='bullet'>•</span>
+					<span className='comment__post-date'>{getDate(date)}</span>
 				</div>
 				<div className='comment__post-body'>{comment}</div>
 			</div>

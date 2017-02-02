@@ -13,6 +13,7 @@ function isFetchingCandidate(state = false, action){
 export default function vacancy(state = {
 	id: null,
 	fullname: '',
+	date: '',
 	cvPath: '#',
 	dateResponse: '',
 	dateInterview: '',

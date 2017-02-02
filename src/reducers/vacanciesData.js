@@ -61,15 +61,8 @@ export default function vacanciesData(state = {
 			return assign({}, state, {
 				vacancies: receiveVacancies(state.vacancies, action),
 				isFetching: isFetchingVacancies(state.isFetching, action),
-				orderedByTitle: action.orderedByTitle,
-				orderedByStatus: action.orderedByStatus
-			});
-		}
-		
-		case constants.VACANCIES_CHANGE_STATUS:
-		case constants.VACANCIES_CHANGE_STATUS_SUCCESS: {
-			return assign({}, state, {
-				vacancies: receiveVacancies(state.vacancies, action),
+				search: action.search,
+				page: action.page,
 				statusFilter: {
 					filters: [
 						{ payload: 'all', text: 'Все вакансии' },
@@ -77,8 +70,10 @@ export default function vacanciesData(state = {
 						{ payload: 'closed', text: 'Закрытые' },
 						{ payload: 'active', text: 'В работе' }
 					],
-					selected: action.status || state.status
-				}
+					selected: action.status || 'all'
+				},
+				orderedByTitle: action.orderedByTitle,
+				orderedByStatus: action.orderedByStatus
 			});
 		}
 		

@@ -3,7 +3,7 @@ import filter from 'lodash/filter';
 // import indexOf from 'lodash/indexOf';
 
 const limitRows = 15;
-
+const vacanciesCount = 100;
 /* function getRandomArbitrary(min, max) {
 	return Math.random() * (max - min) + min;
 }*/
@@ -75,7 +75,6 @@ function mockVacancies(){
 	}
 	
 	const outVacancies = [];
-	const vacanciesCount = 5;
 
 	for (let i = 0; i < vacanciesCount; i++) {
 		const candidates = [];
@@ -91,6 +90,7 @@ function mockVacancies(){
 				candidateComments.push({
 					id: jj,
 					fullname: 'Fullname who pass a comment',
+					date: new Date(),
 					comment: `Comment for candidate ${j}\r\n
 						Comment for candidate ${j}\r\nComment for candidate ${j}
 						Comment for candidate ${j}\r\n\Comment for candidate ${j}\r\n\Comment for candidate ${j}

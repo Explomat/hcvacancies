@@ -98,6 +98,8 @@ export function getVacancies(search, page, status, orderedByTitle, orderedByStat
 			dispatch({
 				type: constants.VACANCIES_GET_VACANCIES_SUCCESS,
 				response: getMockVacancies(search, page, status, orderedByTitle, orderedByStatus),
+				search,
+				page,
 				status,
 				orderedByTitle,
 				orderedByStatus

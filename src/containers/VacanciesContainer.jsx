@@ -20,8 +20,8 @@ class VacanciesContainer extends Component {
 	}
 	
 	componentDidMount(){
-		const { search, page, statusFilter, orderedByTitle, orderedByStatus } = this.props;
-		this._getVacancies(search, page, statusFilter.selected, orderedByTitle, orderedByStatus);
+		const { search, statusFilter, orderedByTitle, orderedByStatus } = this.props;
+		this._getVacancies(search, 0, statusFilter.selected, orderedByTitle, orderedByStatus);
 		window.addEventListener('scroll', this._srollDown);
 	}
 	
@@ -30,23 +30,23 @@ class VacanciesContainer extends Component {
 	}
 
 	handleSearch(val){
-		const { page, statusFilter, orderedByTitle, orderedByStatus } = this.props;
-		this._getVacancies(val, page, statusFilter.selected, orderedByTitle, orderedByStatus);
+		const { statusFilter, orderedByTitle, orderedByStatus } = this.props;
+		this._getVacancies(val, 0, statusFilter.selected, orderedByTitle, orderedByStatus);
 	}
 	
 	handleChangeStatus(e, payload){
 		const { search, orderedByTitle, orderedByStatus  } = this.props;
-		this.props.changeStatus(search, 0, payload, orderedByTitle, orderedByStatus);
+		this._getVacancies(search, 0, payload, orderedByTitle, orderedByStatus);
 	}
 	
 	handleSortByTitle(e, payload){
-		const { search, page, statusFilter, orderedByStatus } = this.props;
-		this._getVacancies(search, page, statusFilter.selected, payload, orderedByStatus);
+		const { search, statusFilter, orderedByStatus } = this.props;
+		this._getVacancies(search, 0, statusFilter.selected, payload, orderedByStatus);
 	}
 	
 	handleSortByStatus(e, payload){
-		const { search, page, statusFilter, orderedByTitle } = this.props;
-		this._getVacancies(search, page, statusFilter.selected, orderedByTitle, payload);
+		const { search, statusFilter, orderedByTitle } = this.props;
+		this._getVacancies(search, 0, statusFilter.selected, orderedByTitle, payload);
 	}
 	
 	_srollDown(){
