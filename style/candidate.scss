@@ -1,152 +1,157 @@
-.candidate {
-	.candidate__fullname{
-		padding-bottom: 4px;
-	    margin-bottom: 8px;
-	    font-size: 2em;
-	    color: #444;
-	    word-break: break-all;
-	}
-	.candidate___description{
-		padding: 0;
-	    margin: 0 -10px 24px 0;
-	    font-size: 15px;
-	    line-height: 18px;
-	    overflow: hidden;
-	    
-	    .candidate__field-label{
-			color: rgba(0, 0, 0, .5);
-		    clear: both;
-		    float: left;
-		    width: 130px;
-		    margin: 0 5px 10px 0;
+.candidate-container{
+	position: relative;
+    min-height: 478px;
+    
+	.candidate {
+		.candidate__fullname{
+			padding-bottom: 4px;
+		    margin-bottom: 8px;
+		    font-size: 2em;
+		    color: #444;
+		    word-break: break-all;
 		}
-		.candidate__field-value{
-			float: left;
-		    margin: 0 0 10px;
-		    max-width: 162px;
-		}
-	}
-	.candidate__boss-is-comment{
-		margin-bottom: 32px;
-		
-		.candidate__boss-title{
-			font-weight: 700;
+		.candidate___description{
+			padding: 0;
+		    margin: 0 -10px 24px 0;
 		    font-size: 15px;
-		    color: #999;
-		    margin-bottom: 12px;
-		    padding-bottom: 4px;
-		    border-bottom: 2px solid #19c78b;
-		    display: inline-block;
-		}
-		.candidate__boss-comment-container{
-			
-			.candidate__boss-comment-cancel{
-				margin-right: 8px;
+		    line-height: 18px;
+		    overflow: hidden;
+		    
+		    .candidate__field-label{
+				color: rgba(0, 0, 0, .5);
+			    clear: both;
+			    float: left;
+			    width: 130px;
+			    margin: 0 5px 10px 0;
 			}
+			.candidate__field-value{
+				float: left;
+			    margin: 0 0 10px;
+			    max-width: 162px;
+			}
+		}
+		.candidate__boss-is-comment{
+			margin-bottom: 32px;
 			
-			.candidate__boss-comment-submit{
+			.candidate__boss-title{
+				font-weight: 700;
+			    font-size: 15px;
+			    color: #999;
+			    margin-bottom: 12px;
+			    padding-bottom: 4px;
+			    border-bottom: 2px solid #19c78b;
+			    display: inline-block;
+			}
+			.candidate__boss-comment-container{
 				
+				.candidate__boss-comment-cancel{
+					margin-right: 8px;
+				}
+				
+				.candidate__boss-comment-submit{
+					
+				}
+				
+				.candidate__boss-comment{
+					background-color: #dcdddf;
+				    padding: 12px;
+				    
+				    .candidate__boss-comment-avatar{
+				    	font-size: 1.5em;
+					    float: left;
+					    margin-right: 2px;
+					    margin-left: -12px;
+					    color: #4183c4;
+					    line-height: 1px;
+				    }
+				    
+				    .candidate__boss-comment-post{
+				    	.candidate__boss-comment-post-header{
+						    line-height: 1;
+						    font-size: 13px;
+						    margin-bottom: 8px;
+		    				
+		    				.candidate__boss-comment-post-author{
+		    					color: #656c7a;
+		    					font-weight: 700;
+		    				}
+		    				.candidate__boss-comment-post-menu{
+		    					float: right;
+		    					color: #acacac;
+		    					cursor: pointer;
+		    					padding: 0 4px;
+		    					
+		    					&:hover {
+		    						color: #444;
+		    						font-size: 14px;
+		    					}
+		    				}
+						}
+						.candidate__boss-comment-post-body{
+							font-size: 15px;
+						    overflow: hidden;
+						    zoom: 1;
+						    width: 100%;
+						    padding-left: 24px;
+						    color: #2a2e2e;
+						}
+				    }
+				}
 			}
 			
-			.candidate__boss-comment{
-				background-color: #dcdddf;
-			    padding: 12px;
-			    
-			    .candidate__boss-comment-avatar{
-			    	font-size: 1.5em;
-				    float: left;
-				    margin-right: 2px;
-				    margin-left: -12px;
-				    color: #4183c4;
-				    line-height: 1px;
-			    }
-			    
-			    .candidate__boss-comment-post{
-			    	.candidate__boss-comment-post-header{
-					    line-height: 1;
-					    font-size: 13px;
-					    margin-bottom: 8px;
-	    				
-	    				.candidate__boss-comment-post-author{
-	    					color: #656c7a;
-	    					font-weight: 700;
-	    				}
-	    				.candidate__boss-comment-post-menu{
-	    					float: right;
-	    					color: #acacac;
-	    					cursor: pointer;
-	    					padding: 0 4px;
-	    					
-	    					&:hover {
-	    						color: #444;
-	    						font-size: 14px;
-	    					}
-	    				}
-					}
-					.candidate__boss-comment-post-body{
-						font-size: 15px;
-					    overflow: hidden;
-					    zoom: 1;
-					    width: 100%;
-					    padding-left: 24px;
-					    color: #2a2e2e;
-					}
-			    }
+		}
+		.candidate__comments{
+			.candidate__comments-title{
+				font-weight: 700;
+			    font-size: 15px;
+			    color: #999;
+			    margin-bottom: 12px;
+			    padding-bottom: 4px;
+			    border-bottom: 2px solid #19c78b;
+			    display: inline-block;
 			}
-		}
-		
-	}
-	.candidate__comments{
-		.candidate__comments-title{
-			font-weight: 700;
-		    font-size: 15px;
-		    color: #999;
-		    margin-bottom: 12px;
-		    padding-bottom: 4px;
-		    border-bottom: 2px solid #19c78b;
-		    display: inline-block;
-		}
-		.candidate__comments-list{
-			.comment {
-				background-color: #edeef2;
-	    		padding: 12px;
-	    		margin-bottom: 12px;
-	    		
-				.comment__avatar{
-					font-size: 1.5em;
-				    float: left;
-				    margin-right: 2px;
-				    margin-left: -12px;
-				    color: #4183c4;
-				    line-height: 1px;
-				}
-				.comment__post{
-					.comment__post-header{
-					    line-height: 1;
-					    font-size: 13px;
-					    margin-bottom: 8px;
-	    				
-	    				.comment__post-author{
-	    					color: #656c7a;
-	    					font-weight: 700;
-	    				}
-	    				.comment__post-date{
-	    					font-size: 12px;
-	    					color: #656c7a;
-	    					font-weight: 500;
-	    				}
+			.candidate__comments-list{
+				.comment {
+					background-color: #edeef2;
+		    		padding: 12px;
+		    		margin-bottom: 12px;
+		    		
+					.comment__avatar{
+						font-size: 1.5em;
+					    float: left;
+					    margin-right: 2px;
+					    margin-left: -12px;
+					    color: #4183c4;
+					    line-height: 1px;
 					}
-					.comment__post-body{
-						font-size: 15px;
-					    overflow: hidden;
-					    zoom: 1;
-					    width: 100%;
-					    padding-left: 24px;
-					    color: #2a2e2e;
+					.comment__post{
+						.comment__post-header{
+						    line-height: 1;
+						    font-size: 13px;
+						    margin-bottom: 8px;
+		    				
+		    				.comment__post-author{
+		    					color: #656c7a;
+		    					font-weight: 700;
+		    				}
+		    				.comment__post-date{
+		    					font-size: 12px;
+		    					color: #656c7a;
+		    					font-weight: 500;
+		    				}
+						}
+						.comment__post-body{
+							font-size: 15px;
+						    overflow: hidden;
+						    zoom: 1;
+						    width: 100%;
+						    padding-left: 24px;
+						    color: #2a2e2e;
+						}
 					}
 				}
 			}
+			
 		}
-		
 	}
 }

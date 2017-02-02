@@ -78,7 +78,7 @@ class Candidate extends Component {
 					/>
 					<ButtonPrimary
 						onClick={this.handleEditBossPost}
-						text='Добавить'
+						text='Редактировать'
 						className='candidate__boss-comment-submit'
 						loading={isFetchingBossPost}
 					/>
@@ -123,7 +123,7 @@ class Candidate extends Component {
 					<span className='candidate__field-value'>{getDate(dateInvitation)}</span>
 					<span className='candidate__field-label'>Резюме</span>
 					<span className='candidate__field-value'>
-						<a href={cvPath}>
+						<a href={cvPath} onClick={e => e.preventDefault()}>
 							<span>Скачать </span>
 							<i className='icon-file-archive'/>
 						</a>
