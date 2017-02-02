@@ -3,17 +3,18 @@ import { Link } from 'react-router';
 import numDeclension from '../utils/numDeclension';
 import getDate from '../utils/getDate';
 
-const Candidate = ({ id, vacancyId, fullname, dateResponse, dateInterview, dateInvitation, commentsCount }) => {
+const Candidate = ({ id, vacancyId, fullname, status/* , dateResponse, dateInterview, dateInvitation*/, commentsCount }) => {
 	return (
 		<div className='vacancy__candidate'>
 			<Link to={`vacancy/${vacancyId}/${id}`} className='no-link vacancy__candidate-link'>
 				<i className='icon-user vacancy__candidate-icon' />
 				<div className='vacancy__candidate-fullname'>{fullname}</div>
-				<span className='vacancy__candidate-dates'>
+				{/* <span className='vacancy__candidate-dates'>
 					<span>{getDate(dateResponse)}</span>&nbsp;/&nbsp;
 					<span>{getDate(dateInterview)}</span>&nbsp;/&nbsp;
 					<span>{getDate(dateInvitation)}</span>
-				</span>
+				</span>*/}
+				<span className='vacancy__candidate-status'>{status}</span>
 				<div className='vacancy__candidate-additional'>
 					<i className='icon-comment vacancy__candidate-additional-comment-icon'/>
 					<span>{commentsCount}</span>

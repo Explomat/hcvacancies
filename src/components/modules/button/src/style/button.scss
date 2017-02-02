@@ -1,6 +1,7 @@
 @import '../../../vars.scss';
 
 .button-default {
+	position: relative;
     display: inline-block;
     padding: .5em;
     background-image: linear-gradient(#fff, #ddd);

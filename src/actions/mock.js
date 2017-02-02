@@ -1,12 +1,13 @@
 import numberToWords from 'number-to-words';
 import filter from 'lodash/filter';
+import find from 'lodash/find';
 // import indexOf from 'lodash/indexOf';
 
 const limitRows = 15;
 const vacanciesCount = 100;
-/* function getRandomArbitrary(min, max) {
-	return Math.random() * (max - min) + min;
-}*/
+function getRandomArbitrary(min, max) {
+	return Math.floor(Math.random() * (max - min)) + min;
+}
 
 function filterVacancies(vacancies, search, page, status, orderedByTitle, orderedByStatus){
 	const newVacancies = filter(vacancies, v => {
@@ -60,7 +61,7 @@ function filterVacancies(vacancies, search, page, status, orderedByTitle, ordere
 		}
 		return 0;
 	});*/
-	return sliceVacancies;
+	return { vacancies: sliceVacancies, pagesCount: Math.round(newVacancies.length / limitRows) };
 }
 
 function mockVacancies(){
@@ -79,12 +80,12 @@ function mockVacancies(){
 	for (let i = 0; i < vacanciesCount; i++) {
 		const candidates = [];
 		const comments = [];
-		const vacancyCommentsCount = 5;
-		const candidatesCount = 4;
+		const vacancyCommentsCount = getRandomArbitrary(0, 5);
+		const candidatesCount = getRandomArbitrary(1, 6);
 		
 		for (let j = 0; j < candidatesCount; j++) {
 			const candidateComments = [];
-			const candidateCommentsCount = 6;
+			const candidateCommentsCount = getRandomArbitrary(1, 6);
 			
 			for (let jj = 0; jj < candidateCommentsCount; jj++){
 				candidateComments.push({
@@ -93,20 +94,28 @@ function mockVacancies(){
 					date: new Date(),
 					comment: `Comment for candidate ${j}\r\n
 						Comment for candidate ${j}\r\nComment for candidate ${j}
-						Comment for candidate ${j}\r\n\Comment for candidate ${j}\r\n\Comment for candidate ${j}
-						Comment for candidate ${j}\r\n\Comment for candidate ${j}\r\n\Comment for candidate ${j}
-						Comment for candidate ${j}\r\n\Comment for candidate ${j}\r\n\Comment for candidate ${j}
-						Comment for candidate ${j}\r\n\Comment for candidate ${j}\r\n\Comment for candidate ${j}`
+						Comment for candidate ${j}\r\nComment for candidate ${j}\r\nComment for candidate ${j}
+						Comment for candidate ${j}\r\nComment for candidate ${j}\r\nComment for candidate ${j}
+						Comment for candidate ${j}\r\nComment for candidate ${j}\r\nComment for candidate ${j}
+						Comment for candidate ${j}\r\nComment for candidate ${j}\r\nComment for candidate ${j}`
 				});
 			}
+			
 			candidates.push({
 				id: j,
 				fullname: `Candidate ${i}/${j}`,
+				status: getStatus(j),
 				cvPath: '#',
 				dateResponse: new Date(),
 				dateInterview: new Date(),
 				dateInvitation: new Date(),
-				comments: candidateComments
+				comments: candidateComments,
+				boss: null
+				/* boss: {
+					id: 'boss_id',
+					fullname: 'Boss',
+					comment: 'Comment from boss'
+				} // getRandomArbitrary(0, 2) ? 'Comment from boss' : ''*/
 			});
 		}
 		for (let k = 0; k < vacancyCommentsCount; k++) {
@@ -131,7 +140,8 @@ function mockVacancies(){
 const vacancies = mockVacancies();
 
 export function getMockVacancies(search, page, status, orderedByTitle, orderedByStatus){
-	return filterVacancies(vacancies, search, page, status, orderedByTitle, orderedByStatus).map(v => {
+	const data = filterVacancies(vacancies, search, page, status, orderedByTitle, orderedByStatus);
+	const filteredVacancies = data.vacancies.map(v => {
 		return {
 			id: v.id,
 			title: v.title,
@@ -141,6 +151,10 @@ export function getMockVacancies(search, page, status, orderedByTitle, orderedBy
 			commentsCount: v.comments.length
 		};
 	});
+	return {
+		vacancies: filteredVacancies,
+		pagesCount: data.pagesCount
+	};
 }
 
 export function getMockVacancy(vacancyId){
@@ -150,6 +164,7 @@ export function getMockVacancy(vacancyId){
 			return {
 				id: c.id,
 				fullname: c.fullname,
+				status: c.status,
 				cvPath: c.cvPath,
 				dateResponse: c.dateResponse,
 				dateInterview: c.dateInterview,
@@ -173,4 +188,37 @@ export function getMockCandidate(vacancyId, candidateId){
 		return vacancy.candidates.filter(c => c.id.toString() === candidateId.toString())[0];
 	}
 	return null;
+}
+
+export function editMockBossPost(vacancyId, candidateId, post){
+	try {
+		const vacancy = find(vacancies, v => {
+			return v.id.toString() === vacancyId.toString();
+		});
+		if (!vacancy){
+			throw new Error('Произошла непредвиденная ошибка, обратитесь к администратору!');
+		}
+		const candidate = find(vacancy.candidates, c => {
+			return c.id.toString() === candidateId.toString();
+		});
+		if (!candidate){
+			throw new Error('Произошла непредвиденная ошибка, обратитесь к администратору!');
+		}
+		if (!candidate.boss) {
+			candidate.boss = {
+				id: 'boss_id',
+				fullname: 'Boss',
+				comment: post
+			};
+		} else {
+			candidate.boss.comment = post;
+		}
+		
+		return candidate;
+	} catch (e){
+		return {
+			status: 'error',
+			error: e.message
+		};
+	}
 }

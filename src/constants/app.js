@@ -11,12 +11,14 @@ const remoteConstants = createRemoteActions([
 	'VACANCIES_SEARCH',
 	'VACANCIES_CHANGE_STATUS',
 	
-	'CANDIDATES_GET_CANDIDATE'
+	'CANDIDATES_GET_CANDIDATE',
+	'CANDIDATES_EDIT_BOSS_POST'
 ]);
 
 const constants = keyMirror({
 	'APP_ERROR_MESSAGE': null,
-	'APP_CHANGE_TITLE': null
+	'APP_CHANGE_TITLE': null,
+	'CANDIDATES_TOGGLE_EDIT_BOSS_POST': null
 });
 
 export default merge(remoteConstants, constants);

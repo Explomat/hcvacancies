@@ -13,7 +13,10 @@ class CandidateContainer extends Component {
 	render(){
 		const { isFetching } = this.props;
 		return (
-			isFetching ? <h1>Loading...</h1> : <Candidate {...this.props}/>
+			isFetching ? <div className='overlay-loading overlay-loading--show' /> :
+			<div className='vacancy-container'>
+				<Candidate {...this.props}/>
+			</div>
 		);
 	}
 }

@@ -54,6 +54,10 @@ const TextBase = {
 			this.refs.inpt.classList.remove(this.props.notValidClass);
 		}
 	},
+	
+	getValue(){
+		return this.refs.inpt.value;
+	},
 
 	focus(){
 		const inpt = this.refs.inpt;

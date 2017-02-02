@@ -1,82 +1,89 @@
-.vacancy{
+
+.vacancy-container{
+	.vacancy{
 	
-	.vacancy__title{
-		padding-bottom: 4px;
-	    margin-bottom: 8px;
-	    font-size: 2em;
-	    color: #444;
-	    word-break: break-all;
-	    /* border-bottom: 2px solid #ccc; */
-	}
-	.vacancy__description{
-		padding: 0;
-	    margin: 0 -10px 24px 0;
-	    font-size: 15px;
-	    line-height: 18px;
-	    overflow: hidden;
-	    
-		.vacancy__field-label{
-			color: rgba(0, 0, 0, .5);
-		    clear: both;
-		    float: left;
-		    width: 130px;
-		    margin: 0 5px 10px 0;
+		.vacancy__title{
+			padding-bottom: 4px;
+		    margin-bottom: 8px;
+		    font-size: 2em;
+		    color: #444;
+		    word-break: break-all;
+		    /* border-bottom: 2px solid #ccc; */
 		}
-		.vacancy__field-value{
-			float: left;
-		    margin: 0 0 10px;
-		    max-width: 162px;
-		}
-	}
-	.vacancy__candidates{
-		.vacancy__candidates-title{
-			font-weight: 700;
+		.vacancy__description{
+			padding: 0;
+		    margin: 0 -10px 24px 0;
 		    font-size: 15px;
-		    color: #999;
-		    margin-bottom: 12px;
-		    padding-bottom: 4px;
-		    border-bottom: 2px solid #19c78b;
-		    display: inline-block;
+		    line-height: 18px;
+		    overflow: hidden;
+		    
+			.vacancy__field-label{
+				color: rgba(0, 0, 0, .5);
+			    clear: both;
+			    float: left;
+			    width: 130px;
+			    margin: 0 5px 10px 0;
+			}
+			.vacancy__field-value{
+				float: left;
+			    margin: 0 0 10px;
+			    max-width: 162px;
+			}
 		}
-		.vacancy__candidates-list{
-			.vacancy__candidate{
-				font-size: 1.2em;
-				border-bottom: 1px solid #ccc;
-				
-				&:hover {
-					background-color: rgba(25, 199, 139, 0.1);
-				}
-				
-				.vacancy__candidate-link{
-					display: block;
-		    		padding: 8px 8px;
-		    		
-		    		.vacancy__candidate-fullname{
-		    			color: #444;
-    					word-break: break-all;
-		    		}
-		    		
-					.vacancy__candidate-icon{
-						float: left;
-						margin-right: 2px;
-		    			color: rgb(65, 131, 196);
-		    			line-height: 25px;
+		.vacancy__candidates{
+			.vacancy__candidates-title{
+				font-weight: 700;
+			    font-size: 15px;
+			    color: #999;
+			    margin-bottom: 12px;
+			    padding-bottom: 4px;
+			    border-bottom: 2px solid #19c78b;
+			    display: inline-block;
+			}
+			.vacancy__candidates-list{
+				.vacancy__candidate{
+					font-size: 1.2em;
+					border-bottom: 1px solid #ccc;
+					
+					&:hover {
+						background-color: rgba(25, 199, 139, 0.1);
 					}
-					.vacancy__candidate-dates{
-						font-size: 14px;
-    					color: #999;
-					}
-					.vacancy__candidate-additional{
-						float: right;
-						font-size: 14px;
-    					color: #999;
-						.vacancy__candidate-additional-comment-icon{
+					
+					.vacancy__candidate-link{
+						display: block;
+			    		padding: 8px 8px;
+			    		
+			    		.vacancy__candidate-fullname{
+			    			color: #444;
+	    					word-break: break-all;
+			    		}
+			    		
+						.vacancy__candidate-icon{
+							float: left;
 							margin-right: 2px;
-    						color: #4183c4;
+			    			color: rgb(65, 131, 196);
+			    			line-height: 25px;
+						}
+						.vacancy__candidate-dates{
+							font-size: 14px;
+	    					color: #999;
+						}
+						.vacancy__candidate-status{
+							font-size: 14px;
+							color: #999;
+						}
+						.vacancy__candidate-additional{
+							float: right;
+							font-size: 14px;
+	    					color: #999;
+							.vacancy__candidate-additional-comment-icon{
+								margin-right: 2px;
+	    						color: #4183c4;
+							}
 						}
 					}
 				}
 			}
 		}
-	}
+	}	
 }

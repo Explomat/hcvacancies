@@ -28,7 +28,7 @@ class VacanciesContainer extends Component {
 	componentWillUnmount(){
 		window.removeEventListener('scroll', this._srollDown);
 	}
-
+	
 	handleSearch(val){
 		const { statusFilter, orderedByTitle, orderedByStatus } = this.props;
 		this._getVacancies(val, 0, statusFilter.selected, orderedByTitle, orderedByStatus);
@@ -66,7 +66,7 @@ class VacanciesContainer extends Component {
 	
 	render(){
 		const { isFetching, isFetchingScroll, count } = this.props;
-		const { search, statusFilter, orderedByTitle, orderedByStatus } = this.props;
+		const { search, statusFilter } = this.props;
 		return (
 			<div className='vacancies-container'>
 				<div className='vacancies-container__header'>
@@ -92,29 +92,34 @@ class VacanciesContainer extends Component {
 						>
 							<DropDownIconItem
 								onClick={this.handleSortByTitle}
-								payload={orderedByTitle}
+								payload
 								text='По названию (А-я)'
 							/>
 							<DropDownIconItem
 								onClick={this.handleSortByTitle}
-								payload={!orderedByTitle}
+								payload={false}
 								text='По названию (я-А)'
 							/>
 							<DropDownIconItem
 								onClick={this.handleSortByStatus}
-								payload={orderedByStatus}
-								text='По статусу (А-я)'ы
+								payload
+								text='По статусу (А-я)'
 							/>
 							<DropDownIconItem
 								onClick={this.handleSortByStatus}
-								payload={!orderedByStatus}
+								payload={false}
 								text='По статусу (я-А)'
 							/>
 						</DropDownIcon>
 					</div>
 				</div>
 				<div className='vacancies-container__body'>
-					{isFetching ? <h1>Loading...</h1> : <Vacancies {...this.props}/>}
+					{isFetching ?
+					[
+						<div key='overlay-loading' className='overlay-loading overlay-loading--show' />,
+						<Vacancies key='vacancies' ref='vacancies' {...this.props}/>
+					] : <Vacancies ref='vacancies' {...this.props}/>}
+					
 				</div>
 				{isFetchingScroll &&
 					<div className='vacancies-container__scroll-loading'>

@@ -1,4 +1,5 @@
 import '../style/common.scss';
+import '../style/vars.scss';
 import '../style/app.scss';
 import '../style/vacancies.scss';
 import '../style/vacancy.scss';

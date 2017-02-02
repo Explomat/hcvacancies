@@ -1,12 +1,12 @@
 // import { get } from '../utils/ajax';
 // import config from '../config';
 import constants from '../constants';
-import { getMockVacancies, getMockVacancy, getMockCandidate } from './mock';
+import { getMockVacancies, getMockVacancy, getMockCandidate, editMockBossPost } from './mock';
 
-export function errorReceive(error){
+export function error(err){
 	return {
 		type: constants.APP_ERROR_MESSAGE,
-		error
+		error: err
 	};
 }
 
@@ -17,7 +17,7 @@ export function getAccess(){
 		setTimeout(() => {
 			// dispatch(errorReceive('Error'));
 			dispatch({ type: constants.APP_GET_ACCESS_SUCCESS, response: { access: true } });
-		}, 0);
+		}, 300);
 		/* const path = config.url.createPath({ server_name: 'Test', action_name: 'getAccess' });
 		get(path, true)
 		.then(resp => JSON.parse(resp))
@@ -44,7 +44,7 @@ export function getCandidate(vacancyId, candidateId){
 				type: constants.CANDIDATES_GET_CANDIDATE_SUCCESS,
 				response: getMockCandidate(vacancyId, candidateId)
 			});
-		}, 0);
+		}, 300);
 	};
 }
 
@@ -58,34 +58,7 @@ export function getVacancy(vacancyId){
 				type: constants.VACANCIES_GET_VACANCY_SUCCESS,
 				response: getMockVacancy(vacancyId)
 			});
-		}, 0);
-	};
-}
-
-export function changeStatus(search, page, status, orderedByTitle, orderedByStatus){
-	return dispatch => {
-		dispatch({ type: constants.VACANCIES_CHANGE_STATUS });
-		
-		setTimeout(() => {
-			dispatch({
-				type: constants.VACANCIES_CHANGE_STATUS_SUCCESS,
-				response: getMockVacancies(search, page, status, orderedByTitle, orderedByStatus),
-				status
-			});
-		}, 0);
-		/* const path = config.url.createPath({ server_name: 'Test', action_name: 'getAccess' });
-		get(path, true)
-		.then(resp => JSON.parse(resp))
-		.then(resp => {
-			if (resp.error){
-				dispatch(errorReceive(resp.error));
-			} else {
-				dispatch({ type: constants.APP_GET_ACCESS_SUCCESS, response: resp });
-			}
-		})
-		.catch(e => {
-			dispatch(errorReceive(e.message));
-		});*/
+		}, 300);
 	};
 }
 
@@ -95,16 +68,18 @@ export function getVacancies(search, page, status, orderedByTitle, orderedByStat
 		dispatch({ type: constants.VACANCIES_GET_VACANCIES });
 		
 		setTimeout(() => {
+			const data = getMockVacancies(search, page, status, orderedByTitle, orderedByStatus);
 			dispatch({
 				type: constants.VACANCIES_GET_VACANCIES_SUCCESS,
-				response: getMockVacancies(search, page, status, orderedByTitle, orderedByStatus),
+				vacancies:data.vacancies,
+				pagesCount: data.pagesCount,
 				search,
 				page,
 				status,
 				orderedByTitle,
 				orderedByStatus
 			});
-		}, 0);
+		}, 300);
 		/* const path = config.url.createPath({ server_name: 'Test', action_name: 'getAccess' });
 		get(path, true)
 		.then(resp => JSON.parse(resp))
@@ -126,12 +101,14 @@ export function getVacanciesOnScroll(search, page, status, orderedByTitle, order
 		dispatch({ type: constants.VACANCIES_GET_VACANCIES_ON_SCROLL });
 		
 		setTimeout(() => {
+			const data = getMockVacancies(search, page, status, orderedByTitle, orderedByStatus);
 			dispatch({
 				type: constants.VACANCIES_GET_VACANCIES_ON_SCROLL_SUCCESS,
-				response: getMockVacancies(search, page, status, orderedByTitle, orderedByStatus),
+				vacancies:data.vacancies,
+				pagesCount: data.pagesCount,
 				page
 			});
-		}, 500);
+		}, 300);
 		/* const path = config.url.createPath({ server_name: 'Test', action_name: 'getAccess' });
 		get(path, true)
 		.then(resp => JSON.parse(resp))
@@ -145,5 +122,29 @@ export function getVacanciesOnScroll(search, page, status, orderedByTitle, order
 		.catch(e => {
 			dispatch(errorReceive(e.message));
 		});*/
+	};
+}
+
+export function editBossPost(vacancyId, candidateId, post){
+	return dispatch => {
+		if (!post){
+			dispatch(error('Комментарий не должен быть пустым!'));
+			return;
+		}
+		
+		dispatch({ type: constants.CANDIDATES_EDIT_BOSS_POST });
+		setTimeout(() => {
+			dispatch({
+				type: constants.CANDIDATES_EDIT_BOSS_POST_SUCCESS,
+				candidate: editMockBossPost(vacancyId, candidateId, post)
+			});
+		}, 300);
+	};
+}
+
+
+export function toggleEditBossPost(){
+	return {
+		type: constants.CANDIDATES_TOGGLE_EDIT_BOSS_POST
 	};
 }

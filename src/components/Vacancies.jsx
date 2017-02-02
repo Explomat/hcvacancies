@@ -35,13 +35,16 @@ class Vacancy extends Component {
 	}
 }
 
-const Vacancies = ({ vacancies }) => {
-	return (
-		<div className='vacancies'>
-			{vacancies.map(v => <Vacancy key={v.id} {...v} />)}
-		</div>
-	);
-};
+class Vacancies extends Component {
+	render(){
+		const { vacancies } = this.props;
+		return (
+			<div className='vacancies'>
+				{vacancies.map(v => <Vacancy key={v.id} {...v} />)}
+			</div>
+		);
+	}
+}
 
 
 export default Vacancies;

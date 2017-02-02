@@ -1,4 +1,5 @@
 .vacancies-container{
+	
 	.vacancies-container__header{
 		margin-bottom: 16px;
 		
@@ -24,10 +25,17 @@
 		}
 	}
 	.vacancies-container__body{
+		position: relative;
+		min-height: 400px;
+		
 		.vacancies{
 			.vacancies__vacancy{
 				padding: 8px 0px;
 				border-bottom: 1px solid #ccc;
+				
+				&:focus {
+					background-color: red;
+				}
 				
 				.vacancies__link{
 					display: block;

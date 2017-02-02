@@ -3,13 +3,20 @@ import cx from 'classnames';
 
 import './style/button.scss';
 
-export const ButtonDefault = ({ text, className, disabled, onClick, children, ...props }) => {
+export const ButtonDefault = ({ text, className, disabled, loading, onClick, children, ...props }) => {
 	const classes = cx({
 		'button-default': true,
 		'button-default--disabled': disabled
 	}, className);
 	return (
-		<button type='button' {...props} disabled={disabled} className={classes} onClick={onClick}>
+		<button
+			type='button'
+			{...props}
+			disabled={disabled}
+			className={classes}
+			onClick={onClick}
+		>
+			{loading && <div className='overlay-loading overlay-loading--show' />}
 			{text}
 			{children}
 		</button>
@@ -59,5 +66,7 @@ export const ButtonDanger = ({ className, reverse, ...props }) => {
 ButtonDefault.propTypes = {
 	text: React.PropTypes.string,
 	onClick: React.PropTypes.func,
-	className: React.PropTypes.string
+	className: React.PropTypes.string,
+	disabled: React.PropTypes.bool,
+	loading: React.PropTypes.bool
 };
