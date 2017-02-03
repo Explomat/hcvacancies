@@ -12,10 +12,10 @@ const Comment = ({ fullname, date, status, comment }) => {
 			</div>
 			<div className='comment__post'>
 				<div className='comment__post-header'>
-					<span className='comment__post-author'>{fullname}</span>
+					<span className='comment__post-status'>{status}</span>
 					<span className='bullet'>•</span>
 					<span className='comment__post-date'>{getDate(date)}</span>
-					<div className='comment__post-status'>{status}</div>
+					<div className='comment__post-author'>{fullname}</div>
 				</div>
 				<div className='comment__post-body'>{comment}</div>
 			</div>
@@ -42,13 +42,8 @@ class Candidate extends Component {
 	
 	renderAddNewBossComment(){
 		const { isFetchingBossPost } = this.props;
-		const header = (
-			<div className='candidate__boss-title'>
-				<span>Ваш комментарий</span>
-			</div>);
 		return (
 			<div className='candidate__boss-comment-container'>
-				{header}
 				<TextAreaView ref='bossComment' placeholder='Добавьте комментарий'/>
 				<ButtonPrimary
 					onClick={this.handleEditBossPost}

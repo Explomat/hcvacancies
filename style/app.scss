@@ -1,3 +1,5 @@
+@import './vars.scss';
+
 .app-container {
 	box-shadow: 2px 2px 10px 0 #979797;
 	margin: 0 auto;
@@ -8,21 +10,40 @@
         background-position: center center;
         background-repeat: no-repeat;
         background-size: 100%;
-        width: 50px;
-	    height: 50px;
+        width: 32px;
+	    height: 32px;
 	    display: inline-block;
 	}
 
 	.app-container__header {
 		position: relative;
-		padding: 0 15px;
+	    padding: 0 15px;
 	    line-height: 60px;
-	    color: #fff;
-	    background-color: #19c78b; //#646464;
+	    color: $primary-color;
+	    min-height: 40px;
+	    padding-right: 20px;
+	    padding-left: 20px;
+	    background-color: #fafafa;
+	    background-image: -moz-linear-gradient(top, #ffffff, #f2f2f2);
+	    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#f2f2f2));
+	    background-image: -webkit-linear-gradient(top, #ffffff, #f2f2f2);
+	    background-image: -o-linear-gradient(top, #ffffff, #f2f2f2);
+	    background-image: linear-gradient(to bottom, #ffffff, #f2f2f2);
+	    background-repeat: repeat-x;
+	    border: 1px solid #d4d4d4;
+	    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#fff2f2f2', GradientType=0);
+	    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+	    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+	    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+	    
+	    .app-container__title{
+	    	margin: 0;
+    		display: inline-block;
+	    }
 	    
 	    .app-container__back {
 	    	font-size: 1.5em;
-		    color: #fff;
+		    color: #C00014;
 		    text-decoration: none;
 		    vertical-align: middle;
 		    margin-right: 8px;

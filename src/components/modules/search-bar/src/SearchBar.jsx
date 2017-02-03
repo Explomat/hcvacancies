@@ -42,6 +42,7 @@ class SearchBar extends React.Component {
 					placeholder='Поиск...'
 				/>
 				<span className='search-box__search-icon icon-search' />
+				{this.props.children}
 			</div>
 		);
 	}

@@ -104,41 +104,44 @@ class VacanciesContainer extends Component {
 								onSearch={this.handleSearch}
 								value={search}
 								className='vacancies-container__search-bar'
-							/>
-							<span className='vacancies-container__vacancys-count'>{curCount} / {allCount}</span>
+							>
+								<span className='vacancies-container__vacancys-count'>{curCount} / {allCount}</span>
+							</SearchBar>
 						</div>
-						<DropDown
-							onChange={this.handleChangeStatus}
-							items={statusFilter.filters}
-							selectedPayload={statusFilter.selected}
-							deviders={[ 1 ]}
-							className='vacancies-container__filter-status'
-						/>
-						<DropDownIcon
-							icon={<i className='icon-arrow-combo' />}
-							className='default-button vacancies-container__sort'
-						>
-							<DropDownIconItem
-								onClick={this.handleSortByTitle}
-								payload
-								text='По названию (А-я)'
+						<div className='vacancies-container__filters'>
+							<DropDown
+								onChange={this.handleChangeStatus}
+								items={statusFilter.filters}
+								selectedPayload={statusFilter.selected}
+								deviders={[ 1 ]}
+								className='vacancies-container__filter-status'
 							/>
-							<DropDownIconItem
-								onClick={this.handleSortByTitle}
-								payload={false}
-								text='По названию (я-А)'
-							/>
-							<DropDownIconItem
-								onClick={this.handleSortByStatus}
-								payload
-								text='По статусу (А-я)'
-							/>
-							<DropDownIconItem
-								onClick={this.handleSortByStatus}
-								payload={false}
-								text='По статусу (я-А)'
-							/>
-						</DropDownIcon>
+							<DropDownIcon
+								icon={<i className='icon-arrow-combo' />}
+								className='default-button vacancies-container__sort'
+							>
+								<DropDownIconItem
+									onClick={this.handleSortByTitle}
+									payload
+									text='По названию (А-я)'
+								/>
+								<DropDownIconItem
+									onClick={this.handleSortByTitle}
+									payload={false}
+									text='По названию (я-А)'
+								/>
+								<DropDownIconItem
+									onClick={this.handleSortByStatus}
+									payload
+									text='По статусу (А-я)'
+								/>
+								<DropDownIconItem
+									onClick={this.handleSortByStatus}
+									payload={false}
+									text='По статусу (я-А)'
+								/>
+							</DropDownIcon>
+						</div>
 					</div>
 				</div>
 				<div className='vacancies-container__body'>

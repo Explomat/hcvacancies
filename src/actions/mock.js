@@ -93,9 +93,9 @@ function mockVacancies(){
 					fullname: 'ФИО кто оставил комментарий',
 					date: new Date(),
 					status: getStatus(jj, ['Новый кандидат', 'Отклик на вакансию', 'Отклик подходит', 'Собеседование в СБ']),
-					comment: `Lorem ipsum dolor sit amet, 
-					consectetur adipiscing elit. 
-					Donec commodo, est id lobortis gravida, 
+					comment: `Lorem ipsum dolor sit amet,
+					consectetur adipiscing elit.
+					Donec commodo, est id lobortis gravida,
 					diam diam hendrerit purus, at consectetur ligula metus sit amet felis.`
 				});
 			}

@@ -1,8 +1,10 @@
+@import './vars.scss';
+
 .vacancies-container{
 	.vacancies-container__up-icon{
 		position: fixed;
 		bottom: 50px;
-		right: 30%;
+		right: 20%;
 		color: #fff;
 		background-color: #ff5252;
 		line-height: 50px;
@@ -33,14 +35,24 @@
 					margin-right: 8px;
 				}
 				.vacancies-container__vacancys-count{
-					color: #999;
+					position: absolute;
+				    right: 8px;
+				    color: #b6b6b6;
+				    top: 50%;
+				    transform: translateY(-50%);
 				}
 			}
 			
-			.vacancies-container__filter-status{
-				margin-right: 16px;
-			}
-			.vacancies-container__sort{
+			.vacancies-container__filters{
+				display: inline-block;
+				
+				.vacancies-container__filter-status{
+					margin-right: 16px;
+				}
+				.vacancies-container__sort{
+					
+				}
+				
 				
 			}
 		}
@@ -64,8 +76,8 @@
 					border-left: 2px solid transparent;
 					
 					&:hover{
-						border-left: 2px solid #19c78b;
-						background-color: rgba(25, 199, 139, 0.1);
+						border-left: 2px solid $light-primary-color;
+						background-color: $hover-color;
 					}
 					
 					.vacancies__title{
@@ -87,7 +99,7 @@
 					.vacancies__candidates-count{
 						.vacancies__candidates-icon{
 							margin-right: 2px;
-							color: rgb(65, 131, 196);
+							color: $icons-color;
 						}
 					}
 					.vacancies__comments-count{
@@ -106,3 +118,27 @@
 		height: 50px;
 	}
 }
+
+@media only screen and (max-width: 320px) {
+	.vacancies-container__search-bar-container{
+		margin-right: 0 !important;
+		display: block !important;
+		margin-bottom: 16px !important;
+	}
+	.vacancies-container__filters {
+		display: block !important;
+	}
+}
+@media only screen and (min-width: 321px) and (max-width: 1023px) {
+	.vacancies-container__search-bar-container{
+		margin-right: 0 !important;
+		display: block !important;
+		margin-bottom: 16px !important;
+	}
+	
+	.vacancies-container__filters {
+		display: block !important;
+	}
+}
+
+//

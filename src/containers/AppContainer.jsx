@@ -34,7 +34,7 @@ class AppContainer extends Component {
 			<div className='app-container'>
 				<div className='app-container__header'>
 					<a onClick={this.handleBack} href='#' className={iconClasses} />
-					<span className='app-container__title'>{title}</span>
+					<h3 className='app-container__title'>{title}</h3>
 					{errorMessage &&
 						<AlertDanger
 							text={errorMessage}

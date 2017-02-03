@@ -1,3 +1,4 @@
+@import './vars.scss';
 
 .vacancy-container{
 	position: relative;
@@ -8,7 +9,7 @@
 		.vacancy__title{
 			padding-bottom: 4px;
 		    margin-bottom: 8px;
-		    font-size: 2em;
+		    font-size: 1.5em;
 		    color: #444;
 		    word-break: break-all;
 		    /* border-bottom: 2px solid #ccc; */
@@ -38,9 +39,9 @@
 				font-weight: 700;
 			    font-size: 15px;
 			    color: #999;
-			    margin-bottom: 12px;
+			    margin-bottom: 4px;
 			    padding-bottom: 4px;
-			    border-bottom: 2px solid #19c78b;
+			    //border-bottom: 2px solid #19c78b;
 			    display: inline-block;
 			}
 			.vacancy__candidates-list{
@@ -49,7 +50,7 @@
 					border-bottom: 1px solid #ccc;
 					
 					&:hover {
-						background-color: rgba(25, 199, 139, 0.1);
+						background-color: $hover-color;
 					}
 					
 					.vacancy__candidate-link{
@@ -64,7 +65,7 @@
 						.vacancy__candidate-icon{
 							float: left;
 							margin-right: 2px;
-			    			color: rgb(65, 131, 196);
+			    			color: $icons-color;
 			    			line-height: 25px;
 						}
 						.vacancy__candidate-dates{
@@ -81,7 +82,7 @@
 	    					color: #999;
 							.vacancy__candidate-additional-comment-icon{
 								margin-right: 2px;
-	    						color: #4183c4;
+	    						color: $icons-color;
 							}
 						}
 					}

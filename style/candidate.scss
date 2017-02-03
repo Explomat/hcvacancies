@@ -1,3 +1,5 @@
+@import './vars.scss';
+
 .candidate-container{
 	position: relative;
     min-height: 478px;
@@ -6,7 +8,7 @@
 		.candidate__fullname{
 			padding-bottom: 4px;
 		    margin-bottom: 8px;
-		    font-size: 2em;
+		    font-size: 1.5em;
 		    color: #444;
 		    word-break: break-all;
 		}
@@ -37,9 +39,9 @@
 				font-weight: 700;
 			    font-size: 15px;
 			    color: #999;
-			    margin-bottom: 12px;
+			    margin-bottom: 4px;
 			    padding-bottom: 4px;
-			    border-bottom: 2px solid #19c78b;
+			    //border-bottom: 2px solid #19c78b;
 			    display: inline-block;
 			}
 			.candidate__boss-comment-container{
@@ -49,7 +51,7 @@
 				}
 				
 				.candidate__boss-comment-submit{
-					
+					background-color: $primary-color;
 				}
 				
 				.candidate__boss-comment{
@@ -105,9 +107,9 @@
 				font-weight: 700;
 			    font-size: 15px;
 			    color: #999;
-			    margin-bottom: 12px;
+			    margin-bottom: 4px;
 			    padding-bottom: 4px;
-			    border-bottom: 2px solid #19c78b;
+			    //border-bottom: 2px solid #19c78b;
 			    display: inline-block;
 			}
 			.candidate__comments-list{
@@ -121,7 +123,7 @@
 					    float: left;
 					    margin-right: 2px;
 					    margin-left: -12px;
-					    color: #4183c4;
+					    color: $icons-color;
 					    line-height: 1px;
 					}
 					.comment__post{
@@ -131,8 +133,12 @@
 						    margin-bottom: 8px;
 		    				
 		    				.comment__post-author{
-		    					color: #656c7a;
-		    					font-weight: 700;
+		    					position: relative;
+							    display: block;
+							    top: 2px;
+							    font-weight: 500;
+							    font-size: 12px;
+							    color: #7f919e;
 		    				}
 		    				.comment__post-date{
 		    					font-size: 12px;
@@ -140,12 +146,8 @@
 		    					font-weight: 500;
 		    				}
 		    				.comment__post-status{
-		    					position: relative;
-							    display: block;
-							    top: 2px;
-							    font-weight: 500;
-							    font-size: 12px;
-							    color: #7f919e;
+		    					color: #656c7a;
+		    					font-weight: 700;
 		    				}
 						}
 						.comment__post-body{
