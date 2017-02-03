@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { AlertDanger } from '../components/modules/alert';
 import * as actionCreators from '../actions';
 import { connect } from 'react-redux';
+import cx from 'classnames';
 
 class AppContainer extends Component {
 	
@@ -12,7 +13,9 @@ class AppContainer extends Component {
 	
 	handleBack(e){
 		e.preventDefault();
-		this.props.router.goBack();
+		if (!this._isRootHash()) {
+			this.props.router.goBack();
+		}
 	}
 	
 	_isRootHash(){
@@ -22,10 +25,15 @@ class AppContainer extends Component {
 	render(){
 		const { title, isFetching, access, errorMessage, children } = this.props;
 		const isRootHash = this._isRootHash();
+		const iconClasses = cx({
+			'app-container__back': true,
+			'icon-left-open-big': !isRootHash,
+			'app-container__root-icon': isRootHash
+		});
 		return (
 			<div className='app-container'>
 				<div className='app-container__header'>
-					{!isRootHash && <a onClick={this.handleBack} href='#' className='icon-left-open-big app-container__back' />}
+					<a onClick={this.handleBack} href='#' className={iconClasses} />
 					<span className='app-container__title'>{title}</span>
 					{errorMessage &&
 						<AlertDanger
