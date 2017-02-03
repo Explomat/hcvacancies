@@ -4,7 +4,7 @@ import { ButtonDefault, ButtonPrimary } from './modules/button';
 import getDate from '../utils/getDate';
 import numDeclension from '../utils/numDeclension';
 
-const Comment = ({ fullname, date, comment }) => {
+const Comment = ({ fullname, date, status, comment }) => {
 	return (
 		<div className='comment'>
 			<div className='comment__avatar'>
@@ -15,6 +15,7 @@ const Comment = ({ fullname, date, comment }) => {
 					<span className='comment__post-author'>{fullname}</span>
 					<span className='bullet'>•</span>
 					<span className='comment__post-date'>{getDate(date)}</span>
+					<div className='comment__post-status'>{status}</div>
 				</div>
 				<div className='comment__post-body'>{comment}</div>
 			</div>

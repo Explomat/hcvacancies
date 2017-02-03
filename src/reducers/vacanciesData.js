@@ -3,9 +3,10 @@ import assign from 'lodash/assign';
 
 const filters =  [
 	{ payload: 'all', text: 'Все вакансии' },
-	{ payload: 'opened', text: 'Открытые' },
-	{ payload: 'closed', text: 'Закрытые' },
-	{ payload: 'active', text: 'В работе' }
+	{ payload: 'Отменена', text: 'Отмененные' },
+	{ payload: 'Приостановлена', text: 'Приостановленнные' },
+	{ payload: 'Открыта', text: 'Открытые' },
+	{ payload: 'Закрыта', text: 'Закрытые' }
 ];
 
 function isFetchingVacancies(state = false, action){
@@ -49,6 +50,7 @@ export default function vacanciesData(state = {
 	search: '',
 	page: 0,
 	pagesCount: 1,
+	count: 0,
 	statusFilter: {
 		filters,
 		selected: 'all'
@@ -66,6 +68,7 @@ export default function vacanciesData(state = {
 				search: action.search,
 				page: action.page,
 				pagesCount: action.pagesCount,
+				count: action.count,
 				statusFilter: {
 					filters,
 					selected: action.status || 'all'

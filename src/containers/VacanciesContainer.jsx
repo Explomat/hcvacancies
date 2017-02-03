@@ -80,7 +80,7 @@ class VacanciesContainer extends Component {
 	}
 	
 	render(){
-		const { isFetching, isFetchingScroll, count } = this.props;
+		const { isFetching, isFetchingScroll, curCount, allCount } = this.props;
 		const { search, statusFilter } = this.props;
 		const upIconClasses = cx({
 			'vacancies-container__up-icon': true,
@@ -105,7 +105,7 @@ class VacanciesContainer extends Component {
 								value={search}
 								className='vacancies-container__search-bar'
 							/>
-							<span className='vacancies-container__vacancys-count'>{count}</span>
+							<span className='vacancies-container__vacancys-count'>{curCount} / {allCount}</span>
 						</div>
 						<DropDown
 							onChange={this.handleChangeStatus}
@@ -162,7 +162,8 @@ function mapStateToProps(state) {
 	const { vacancies } = state.vacanciesData;
 	
 	return {
-		count: vacancies.length,
+		curCount: vacancies.length,
+		allCount: state.vacanciesData.count,
 		...state.vacanciesData
 	};
 }

@@ -73,6 +73,7 @@ export function getVacancies(search, page, status, orderedByTitle, orderedByStat
 				type: constants.VACANCIES_GET_VACANCIES_SUCCESS,
 				vacancies:data.vacancies,
 				pagesCount: data.pagesCount,
+				count: data.count,
 				search,
 				page,
 				status,
@@ -134,6 +135,7 @@ export function editBossPost(vacancyId, candidateId, post){
 		
 		dispatch({ type: constants.CANDIDATES_EDIT_BOSS_POST });
 		setTimeout(() => {
+			dispatch(error(null));
 			dispatch({
 				type: constants.CANDIDATES_EDIT_BOSS_POST_SUCCESS,
 				candidate: editMockBossPost(vacancyId, candidateId, post)

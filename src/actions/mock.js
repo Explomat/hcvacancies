@@ -61,18 +61,18 @@ function filterVacancies(vacancies, search, page, status, orderedByTitle, ordere
 		}
 		return 0;
 	});*/
-	return { vacancies: sliceVacancies, pagesCount: Math.round(newVacancies.length / limitRows) };
+	return { vacancies: sliceVacancies, pagesCount: Math.round(newVacancies.length / limitRows), count: newVacancies.length  };
 }
 
 function mockVacancies(){
-	function getStatus(id){
+	function getStatus(id, arr){
 		if ((id % 3) === 0) {
-			return 'active';
+			return arr[3];
 		}
 		if ((id % 2) === 0){
-			return 'opened';
+			return arr[2];
 		}
-		return 'closed';
+		return arr[0];
 	}
 	
 	const outVacancies = [];
@@ -92,6 +92,7 @@ function mockVacancies(){
 					id: jj,
 					fullname: 'ФИО кто оставил комментарий',
 					date: new Date(),
+					status: getStatus(jj, ['Новый кандидат', 'Отклик на вакансию', 'Отклик подходит', 'Собеседование в СБ']),
 					comment: `Lorem ipsum dolor sit amet, 
 					consectetur adipiscing elit. 
 					Donec commodo, est id lobortis gravida, 
@@ -101,8 +102,8 @@ function mockVacancies(){
 			
 			candidates.push({
 				id: j,
-				fullname: `Кандидат ${i}/${j}`,
-				status: getStatus(j),
+				fullname: `ФИО кандидата ${j}`,
+				status: getStatus(j, ['Новый кандидат', 'Отклик на вакансию', 'Отклик подходит', 'Собеседование в СБ']),
 				cvPath: '#',
 				dateResponse: new Date(),
 				dateInterview: new Date(),
@@ -126,7 +127,7 @@ function mockVacancies(){
 		outVacancies.push({
 			id: i,
 			title: `Вакансия ${i}`,
-			status: getStatus(i),
+			status: getStatus(i, ['Открыта', 'Закрыта', 'Приостановлена', 'Отменена']),
 			date: new Date(),
 			candidates,
 			comments
@@ -151,7 +152,8 @@ export function getMockVacancies(search, page, status, orderedByTitle, orderedBy
 	});
 	return {
 		vacancies: filteredVacancies,
-		pagesCount: data.pagesCount
+		pagesCount: data.pagesCount,
+		count: data.count
 	};
 }
 
