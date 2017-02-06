@@ -48,14 +48,16 @@
 				.vacancy__candidate{
 					font-size: 1.2em;
 					border-bottom: 1px solid #ccc;
-					
-					&:hover {
-						background-color: $hover-color;
-					}
+					padding: 8px 0;
 					
 					.vacancy__candidate-link{
 						display: block;
-			    		padding: 8px 8px;
+			    		border-left: 2px solid transparent;
+			    		
+			    		&:hover {
+							background-color: $hover-color;
+							border-left: 2px solid $light-primary-color;
+						}
 			    		
 			    		.vacancy__candidate-fullname{
 			    			color: #444;
