@@ -58,6 +58,24 @@ class VacanciesContainer extends Component {
 		this._getVacancies(search, 0, statusFilter.selected, orderedByTitle, payload);
 	}
 	
+	/* _setUpButtonPosition(){
+		const btn = this.refs.iconTop;
+		const documentHeight = document.documentElement.clientHeight;
+		console.log('documentHeight: ' + documentHeight);
+		const contHeight = this.refs.vacanciesContainer.clientHeight;
+		console.log('contHeight: ' + contHeight);
+		const scrollTop = this.refs.vacanciesContainer.getBoundingClientRect().top;
+		console.log('scrollTop: ' + scrollTop);
+
+		if (contHeight > documentHeight) {
+			const hiddentTestsHeight = contHeight - documentHeight;
+			console.log('hiddentTestsHeight: ' + hiddentTestsHeight);
+			const visibleTestsHeight = contHeight - hiddentTestsHeight;
+			console.log('visibleTestsHeight: ' + visibleTestsHeight);
+			btn.style.top = (visibleTestsHeight - btn.offsetHeight - scrollTop - 50) + 'px';
+		}
+	}*/
+	
 	_toggleUpIcon() {
 		this.setState({
 			showUpIcon: window.pageYOffset > document.documentElement.clientHeight
@@ -89,7 +107,6 @@ class VacanciesContainer extends Component {
 		return (
 			<div className='vacancies-container'>
 				<span
-					ref='iconTop'
 					className={upIconClasses}
 					onClick={() => {
 						window.scrollTo(0, 0);
