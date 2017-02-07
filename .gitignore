@@ -1,5 +1,6 @@
 node_modules/
 dist/
+!dist/server/
 !dist/index.html
 !dist/pindex.html
 npm-debug.log

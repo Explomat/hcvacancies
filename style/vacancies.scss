@@ -63,7 +63,7 @@
 		
 		.vacancies{
 			.vacancies__vacancy{
-				padding: 8px 0px;
+				padding: 4px 0px;
 				border-bottom: 1px solid #ccc;
 				
 				&:focus {
@@ -72,7 +72,7 @@
 				
 				.vacancies__link{
 					display: block;
-					padding: 0 8px;
+					padding: 4px 8px;
 					border-left: 2px solid transparent;
 					
 					&:hover{

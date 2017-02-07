@@ -48,11 +48,12 @@
 				.vacancy__candidate{
 					font-size: 1.2em;
 					border-bottom: 1px solid #ccc;
-					padding: 8px 0;
+					padding: 4px 0;
 					
 					.vacancy__candidate-link{
 						display: block;
 			    		border-left: 2px solid transparent;
+			    		padding: 4px 0px;
 			    		
 			    		&:hover {
 							background-color: $hover-color;
