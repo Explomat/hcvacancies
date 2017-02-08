@@ -59,7 +59,7 @@ function _vacancies(connection, search, page, status, order, limitRows){
 		REPLACE(v.title, '\"', '') as title,
 		v.status,
 		v.date,
-		(select COUNT(DISTINCT(e.candidate_id)) from events e where e.vacancy_id = v.id) candidates_count
+		v.candidates_num as candidates_count
 	from (
 		select ROW_NUMBER() OVER(ORDER BY vacancies.name) rowNum, 
 		vacancies.id,
@@ -179,8 +179,14 @@ function _candidate(connection, vacancyId, candidateId){
 	var candidateData = __fetchData(candidateRecordSet)[0];
 	if (candidateData != undefined){
 		var commentsQuery = "
-			select e.id, u.fullname, e.date, e.type_id as status, e.comment from events e
+			select e.id, u.fullname, e.date, e.comment,
+			case 
+				when e.occurrence_id = '' then e.type_id
+				when e.occurrence_id <> '' then e.type_id + ':' + e.occurrence_id
+			end status
+			from events e
 			inner join users u on u.id = e.user_id
+			inner join candidates c on c.id = e.candidate_id
 			where e.vacancy_id = " + vacancyId + "
 			and e.candidate_id = " + candidateId;
 		var commentsRecordSet = connection.Execute(commentsQuery);
@@ -192,10 +198,15 @@ function _candidate(connection, vacancyId, candidateId){
 			status: candidateData.status,
 			attachment_id: _candidateAttachmentId(candidateData.attachments),
 			comments: commentsData,
-			statuses: candidateStatuses
+			statuses: candidateStatuses,
+			bossStatus: 'test'
 		}
 	}
 	return null;
+}
+
+function _bossCommentForCandidate(){
+	
 }
 
 function getVacancies(queryObjects){
@@ -259,10 +270,9 @@ function getCandidateResume(queryObjects){
 		var connection = __connect();
 		var resume = _candidateResume(connection, attachmentId);
 		
-		var fileName = queryObjects.file_name;
 		var fileData = LoadFileData(ROOT_DIRECTORY + '\\'+ curUserID+'\\'+ fileName);
-		Request.RespContentType = 'application/pdf';
-		Request.AddRespHeader("Content-Disposition","attachment; filename=" + fileName);
+		Request.RespContentType = 'text/html';
+		Request.AddRespHeader("Content-Disposition","attachment; filename=resume.html");
 		return fileData;
 	} catch(e){
 		alert(e);
@@ -289,6 +299,19 @@ function getCandidate(queryObjects){
 	}
 }
 
+/*function updateBossCommentForCandidate(queryObjects){
+	try {
+		var data = tools.read_object(queryObjects.Body);
+		var vacancyId = data.HasProperty('vacancy_id') ? data.vacancy_id : null;
+		var candidateId = data.HasProperty('candidate_id') ? data.candidate_id : null;
+		var comment = data.HasProperty('comment') ? data.comment : null;
+		
+		if (vacancyId == null || candidateId == null || comment == null){
+			throw "Неверные входные данные!";
+		}
+	}
+}*/
+
 //getVacancies({});
 //getVacancy({vacancy_id: 20687982340604723});
-getCandidate({vacancy_id: 5617996101482139474, candidate_id: 1193842844893290933});
+//getCandidate({vacancy_id: 5617996101482139474, candidate_id: 1193842844893290933});
