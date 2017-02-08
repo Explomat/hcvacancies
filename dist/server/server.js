@@ -1,7 +1,3 @@
-function _toJSON(obj){
-	return tools.object_to_text(obj, 'json');
-}
-
 function __isConnectOpen(connection){
 	return (connection != undefined && connection != null) && connection.state != null && connection.state != 0;
 }
@@ -35,6 +31,10 @@ function __fetchData(recordSet){
 		}
 	}
 	return arrResult;
+}
+
+function _toJSON(obj){
+	return tools.object_to_text(obj, 'json');
 }
 
 function _vacanciesCount(connection, search, status, limitRows){
@@ -137,9 +137,42 @@ function _candidateStatuses(connection){
 	return __fetchData(recordSet);
 }
 
+function _candidateResume(connection, attachmentId){
+	var query = "select lf.data from [(spxml_large_fields)] lf where lf.id = " + attachmentId;
+	var recordSet = connection.Execute(query);
+	return __fetchData(recordSet)[0];
+}
+
 function _candidate(connection, vacancyId, candidateId){
+	
+	function _candidateAttachmentId(attachmentsStr){
+		
+		function selectByKey(arr, key, value){
+			var outArr = [];
+			for (elem in arr){
+				if ((el = elem.OptChild(key)) != undefined && el.Value == value){
+					outArr.push(elem);
+				}
+			}
+			return outArr;
+		}
+		
+		try {
+			var doc = OpenDocFromStr('<root>' + attachmentsStr + '</root>');
+			var resumeTypedAttaches = selectByKey(doc.TopElem.attachments, "type_id", "resume");
+			var len = resumeTypedAttaches.length;
+			if (len > 0){
+				var elem = resumeTypedAttaches[len - 1].text.OptAttrValue("EXT-OBJECT-ID", 'null');
+				return elem == 'null' ? null : Int(elem);
+			}
+		} catch(e){
+			return null;
+		}
+		return null;
+	}
+	
 	var candidateQuery = "
-		select c.id, c.fullname, c.state_id as status, c.attachments as cv_path 
+		select c.id, c.fullname, c.state_id as status, c.attachments 
 		from candidates c
 		where c.id = " + candidateId;
 	var candidateRecordSet = connection.Execute(candidateQuery);
@@ -157,7 +190,7 @@ function _candidate(connection, vacancyId, candidateId){
 			id: candidateData.id,
 			fullname: candidateData.fullname,
 			status: candidateData.status,
-			cv_id: '/view_doc.html?mode=vacancies',
+			attachment_id: _candidateAttachmentId(candidateData.attachments),
 			comments: commentsData,
 			statuses: candidateStatuses
 		}
@@ -217,6 +250,27 @@ function getVacancy(queryObjects){
 	}
 }
 
+function getCandidateResume(queryObjects){
+	var attachmentId = queryObjects.HasProperty('attachment_id') ? queryObjects.attachment_id : null;
+	try {
+		if (attachmentId == null){
+			throw "Неверные входные данные!";
+		}
+		var connection = __connect();
+		var resume = _candidateResume(connection, attachmentId);
+		
+		var fileName = queryObjects.file_name;
+		var fileData = LoadFileData(ROOT_DIRECTORY + '\\'+ curUserID+'\\'+ fileName);
+		Request.RespContentType = 'application/pdf';
+		Request.AddRespHeader("Content-Disposition","attachment; filename=" + fileName);
+		return fileData;
+	} catch(e){
+		alert(e);
+	} finally {
+		__closeConnect();
+	}
+}
+
 function getCandidate(queryObjects){
 	var vacancyId = queryObjects.HasProperty('vacancy_id') ? queryObjects.vacancy_id : null;
 	var candidateId = queryObjects.HasProperty('candidate_id') ? queryObjects.candidate_id : null;
@@ -237,4 +291,4 @@ function getCandidate(queryObjects){
 
 //getVacancies({});
 //getVacancy({vacancy_id: 20687982340604723});
-//getCandcidate({vacancy_id: 5617996101482139474, candidate_id: 1193842844893290933});
+getCandidate({vacancy_id: 5617996101482139474, candidate_id: 1193842844893290933});
