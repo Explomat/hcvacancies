@@ -21,7 +21,16 @@ class CandidateContainer extends Component {
 }
 
 function mapStateToProps(state) {
-	return { ...state.candidate };
+	const { states } = state.candidate;
+	
+	const viewStates = {};
+	states.forEach(s => {
+		viewStates[s.payload] = {
+			text: s.text,
+			color: s.color
+		};
+	});
+	return { ...state.candidate, viewStates };
 }
 
 export default connect(mapStateToProps, actionCreators)(CandidateContainer);

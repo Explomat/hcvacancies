@@ -21,7 +21,23 @@ class VacancyContainer extends Component {
 }
 
 function mapStateToProps(state) {
-	return { ...state.vacancy };
+	const { vacancyStates, candidateStates } = state.vacancy;
+	
+	const viewVacancyStates = {};
+	vacancyStates.forEach(s => {
+		viewVacancyStates[s.payload] = {
+			text: s.text,
+			color: s.color
+		};
+	});
+	const viewCandidateStates = {};
+	candidateStates.forEach(s => {
+		viewCandidateStates[s.payload] = {
+			text: s.text,
+			color: s.color
+		};
+	});
+	return { ...state.vacancy, viewVacancyStates, viewCandidateStates };
 }
 
 export default connect(mapStateToProps, actionCreators)(VacancyContainer);

@@ -146,7 +146,7 @@
         }],
         "newline-after-var": 0,
         "brace-style": [2, "1tbs"],
-        "camelcase": [2, { "properties": "never" }],
+        "camelcase": [0, { "properties": "never" }],
         "comma-spacing": [2, { "before": false, "after": true }],
         "comma-style": [2, "last"],
         "computed-property-spacing": [2, "never"],

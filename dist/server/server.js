@@ -87,7 +87,7 @@ function _vacancies(connection, userHexId, search, page, states, order, limitRow
 
 function _vacancyStates(connection){
 	var query = "
-		select vs.id, vs.name,	
+		select vs.id as payload, vs.name as text,	
 		case
 			when vs.text_color = '' then '128,128,128'
 			when vs.text_color <> '' then vs.text_color
@@ -121,7 +121,8 @@ function _vacancy(connection, vacancyId){
 			id: vacancyData.id,
 			name: vacancyData.name,
 			state_id: vacancyData.state_id,
-			states: _vacancyStates(connection),
+			vacancyStates: _vacancyStates(connection),
+			candidateStates: _candidateStates(connection),
 			start_date: vacancyData.start_date,
 			candidates: candidatesData
 		}
@@ -131,7 +132,7 @@ function _vacancy(connection, vacancyId){
 
 function _candidateStates(connection){
 	var query = "
-		select cs.id, cs.name,
+		select cs.id as payload, cs.name as text,
 		case
 			when cs.text_color = '' then '128,128,128'
 			when cs.text_color = 'black' then '68,68,68'
@@ -200,11 +201,11 @@ function _candidate(connection, vacancyId, candidateId){
 		return {
 			id: candidateData.id,
 			fullname: candidateData.fullname,
-			state: candidateData.state_id,
+			state_id: candidateData.state_id,
 			attachment_id: _candidateAttachmentId(candidateData.attachments),
 			comments: commentsData,
 			states: candidateStates,
-			bossState: 'test'
+			boss_state_id: 'test'
 		}
 	}
 	return null;
@@ -226,9 +227,9 @@ function getVacancies(queryObjects){
 		var states = 
 			queryObjects.HasProperty('states') ? 
 			(queryObjects.states == 'all' ?
-			ArrayMerge(vacancyStates, 'This.id', '\',\'') :
+			ArrayMerge(vacancyStates, 'This.payload', '\',\'') :
 			queryObjects.states) :
-			ArrayMerge(vacancyStates, 'This.id', '\',\'');
+			ArrayMerge(vacancyStates, 'This.payload', '\',\'');
 		
 		var order = queryObjects.HasProperty('order') ? queryObjects.order : 'name:asc';
 		var limitRows = queryObjects.HasProperty('limit_rows') ? queryObjects.limit_rows : DEFAULT_LIMIT_ROWS;

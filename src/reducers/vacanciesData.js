@@ -1,13 +1,8 @@
 import constants from '../constants';
 import assign from 'lodash/assign';
+import concat from 'lodash/concat';
 
-const filters =  [
-	{ payload: 'all', text: 'Все вакансии' },
-	{ payload: 'Отменена', text: 'Отмененные' },
-	{ payload: 'Приостановлена', text: 'Приостановленнные' },
-	{ payload: 'Открыта', text: 'Открытые' },
-	{ payload: 'Закрыта', text: 'Закрытые' }
-];
+const defaultStates = [ { payload: 'all', text: 'Все вакансии' } ];
 
 function isFetchingVacancies(state = false, action){
 	const { type } = action;
@@ -49,14 +44,13 @@ export default function vacanciesData(state = {
 	isFetchingScroll: false,
 	search: '',
 	page: 0,
-	pagesCount: 1,
+	pages_count: 1,
 	count: 0,
 	statusFilter: {
-		filters,
+		states: defaultStates,
 		selected: 'all'
 	},
-	orderedByTitle: false,
-	orderedByStatus: false
+	order: 'name:asc'
 					
 }, action) {
 	switch (action.type) {
@@ -67,14 +61,12 @@ export default function vacanciesData(state = {
 				isFetching: isFetchingVacancies(state.isFetching, action),
 				search: action.search,
 				page: action.page,
-				pagesCount: action.pagesCount,
+				pages_count: action.pages_count,
 				count: action.count,
 				statusFilter: {
-					filters,
-					selected: action.status || 'all'
-				},
-				orderedByTitle: action.orderedByTitle,
-				orderedByStatus: action.orderedByStatus
+					states: concat(defaultStates, action.states || []),
+					selected: action.state_id || 'all'
+				}
 			});
 		}
 		

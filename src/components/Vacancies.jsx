@@ -15,18 +15,23 @@ class Vacancy extends Component {
 	}
 	
 	render(){
-		const { id, title, status, date, candidatesCount } = this.props;
+		const { id, name, state_id, start_date, candidates_count, viewStates } = this.props;
 		return (
 			<div className='vacancies__vacancy'>
 				<Link onClick={this.handleVacancyClick} to={`vacancy/${id}`} className='no-link vacancies__link'>
-					<div className='vacancies__title'>{title}</div>
-					<span className='vacancies__status'>{status}</span>
+					<div className='vacancies__title'>{name}</div>
+					<span
+						className='vacancies__status'
+						style={{ 'backgroundColor': `rgb(${viewStates[state_id].color})` }}
+					>
+						{viewStates[state_id].text}
+					</span>
 					<span className='bullet'>•</span>
-					<span className='vacancies__date'>{getDate(date)}</span>
+					<span className='vacancies__date'>{getDate(start_date)}</span>
 					<span className='vacancies__additional'>
 						<span className='vacancies__candidates-count'>
 							<i className='icon-user vacancies__candidates-icon' />
-							<span>{candidatesCount}</span>
+							<span>{candidates_count}</span>
 						</span>
 					</span>
 				</Link>
@@ -37,11 +42,11 @@ class Vacancy extends Component {
 
 class Vacancies extends Component {
 	render(){
-		const { vacancies } = this.props;
+		const { vacancies, viewStates } = this.props;
 		
 		return (
 			<div className='vacancies'>
-				{vacancies.map(v => <Vacancy key={v.id} {...v} />)}
+				{vacancies.map(v => <Vacancy key={v.id} viewStates={viewStates} {...v} />)}
 			</div>
 		);
 	}

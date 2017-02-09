@@ -87,8 +87,8 @@ class VacanciesContainer extends Component {
 		const clientHeight = document.documentElement.clientHeight;
 		const offset = window.pageYOffset;
 		
-		const { isFetchingScroll, search, page, pagesCount, statusFilter, orderedByTitle, orderedByStatus } = this.props;
-		if (scrollHeight - (clientHeight + offset) < 100 && !isFetchingScroll && (page + 1) <= pagesCount) {
+		const { isFetchingScroll, search, page, pages_count, statusFilter, orderedByTitle, orderedByStatus } = this.props;
+		if (scrollHeight - (clientHeight + offset) < 100 && !isFetchingScroll && (page + 1) <= pages_count) {
 			this.props.getVacanciesOnScroll(search, page + 1, statusFilter.selected, orderedByTitle, orderedByStatus);
 		}
 	}
@@ -128,7 +128,7 @@ class VacanciesContainer extends Component {
 						<div className='vacancies-container__filters'>
 							<DropDown
 								onChange={this.handleChangeStatus}
-								items={statusFilter.filters}
+								items={statusFilter.states}
 								selectedPayload={statusFilter.selected}
 								deviders={[ 1 ]}
 								className='vacancies-container__filter-status'
@@ -163,11 +163,9 @@ class VacanciesContainer extends Component {
 				</div>
 				<div className='vacancies-container__body'>
 					{isFetching ?
-					[
-						<div key='overlay-loading' className='overlay-loading overlay-loading--show' />,
-						<Vacancies key='vacancies' ref='vacancies' {...this.props}/>
-					] : <Vacancies ref='vacancies' {...this.props}/>}
-					
+						<div key='overlay-loading' className='overlay-loading overlay-loading--show' />
+						: <Vacancies ref='vacancies' {...this.props}/>
+					}
 				</div>
 				{isFetchingScroll &&
 					<div className='vacancies-container__scroll-loading'>
@@ -179,11 +177,19 @@ class VacanciesContainer extends Component {
 }
 
 function mapStateToProps(state) {
-	const { vacancies } = state.vacanciesData;
+	const { vacancies, statusFilter } = state.vacanciesData;
+	const viewStates = {};
+	statusFilter.states.forEach(s => {
+		viewStates[s.payload] = {
+			text: s.text,
+			color: s.color
+		};
+	});
 	
 	return {
 		curCount: vacancies.length,
 		allCount: state.vacanciesData.count,
+		viewStates,
 		...state.vacanciesData
 	};
 }
