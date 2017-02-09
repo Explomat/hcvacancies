@@ -62,23 +62,19 @@ export function getVacancy(vacancyId){
 	};
 }
 
-export function getVacancies(search, page, status, orderedByTitle, orderedByStatus){
+export function getVacancies(search, page, state_id, orderedByTitle, orderedByStatus){
 	return dispatch => {
 		dispatch({ type: constants.APP_CHANGE_TITLE, title: 'Вакансии' });
 		dispatch({ type: constants.VACANCIES_GET_VACANCIES });
 		
 		setTimeout(() => {
-			const data = getMockVacancies(search, page, status, orderedByTitle, orderedByStatus);
+			const data = getMockVacancies(search, page, state_id, orderedByTitle, orderedByStatus);
 			dispatch({
 				type: constants.VACANCIES_GET_VACANCIES_SUCCESS,
-				vacancies:data.vacancies,
-				pagesCount: data.pagesCount,
-				count: data.count,
+				...data,
 				search,
 				page,
-				status,
-				orderedByTitle,
-				orderedByStatus
+				state_id
 			});
 		}, 300);
 		/* const path = config.url.createPath({ server_name: 'Test', action_name: 'getAccess' });

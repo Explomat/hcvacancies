@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import numDeclension from '../utils/numDeclension';
 import getDate from '../utils/getDate';
 
-const Candidate = ({ id, vacancyId, fullname, status/* , dateResponse, dateInterview, dateInvitation*/, commentsCount }) => {
+const Candidate = ({ id, vacancyId, fullname, state_id, comments_count, viewCandidateStates }) => {
 	return (
 		<div className='vacancy__candidate'>
 			<Link to={`vacancy/${vacancyId}/${id}`} className='no-link vacancy__candidate-link'>
@@ -14,10 +14,15 @@ const Candidate = ({ id, vacancyId, fullname, status/* , dateResponse, dateInter
 					<span>{getDate(dateInterview)}</span>&nbsp;/&nbsp;
 					<span>{getDate(dateInvitation)}</span>
 				</span>*/}
-				<span className='vacancy__candidate-status'>{status}</span>
+				<span
+					className='vacancy__candidate-status'
+					style={{ 'backgroundColor': `rgb(${viewCandidateStates[state_id].color})` }}
+				>
+					{viewCandidateStates[state_id].text}
+				</span>
 				<div className='vacancy__candidate-additional'>
 					<i className='icon-comment vacancy__candidate-additional-comment-icon'/>
-					<span>{commentsCount}</span>
+					<span>{comments_count}</span>
 				</div>
 			</Link>
 		</div>
@@ -26,16 +31,16 @@ const Candidate = ({ id, vacancyId, fullname, status/* , dateResponse, dateInter
 
 class Vacancy extends Component {
 	render(){
-		const { id, title, status, date, candidates } = this.props;
+		const { id, name, state_id, start_date, candidates, viewVacancyStates, viewCandidateStates } = this.props;
 		const candidateLen = candidates.length;
 		return (
 			<div className='vacancy'>
-				<div className='vacancy__title'>{title}</div>
+				<div className='vacancy__title'>{name}</div>
 				<div className='vacancy__description'>
 					<span className='vacancy__field-label'>Статус</span>
-					<span className='vacancy__field-value'>{status}</span>
+					<span className='vacancy__field-value'>{viewVacancyStates[state_id].text}</span>
 					<span className='vacancy__field-label'>Дата создания</span>
-					<span className='vacancy__field-value'>{getDate(date)}</span>
+					<span className='vacancy__field-value'>{getDate(start_date)}</span>
 				</div>
 				<div className='vacancy__candidates'>
 					<div className='vacancy__candidates-title'>
@@ -43,7 +48,14 @@ class Vacancy extends Component {
 						<span>{numDeclension(candidateLen, 'Кандидат', 'Кандидата', 'Кандидатов')}</span>
 					</div>
 					<div className='vacancy__candidates-list'>
-						{candidates.map(c => <Candidate key={c.id} vacancyId={id} {...c} />)}
+						{candidates.map(c =>
+							<Candidate
+								key={c.id}
+								viewCandidateStates={viewCandidateStates}
+								vacancyId={id}
+								{...c}
+							/>)
+						}
 					</div>
 				</div>
 			</div>

@@ -12,12 +12,13 @@ function isFetchingVacancies(state = false, action){
 
 export default function vacancy(state = {
 	id: null,
-	title: '',
-	status: '',
-	date: '',
-	comments: [],
+	name: '',
+	state_id: '',
+	vacancyStates: [],
+	candidateStates: [],
+	start_date: '',
 	candidates: [],
-	isFetching: false
+	isFetching: true
 }, action) {
 	switch (action.type) {
 		case constants.VACANCIES_GET_VACANCY:

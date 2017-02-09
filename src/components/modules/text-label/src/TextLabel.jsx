@@ -136,8 +136,10 @@ const TextAreaView = React.createClass(assign({}, TextBase, {
 	},
 
 	componentWillReceiveProps(nextProps){
-		this.setState({ value: nextProps.value });
-		this._setHeight();
+		if (this.props.value !== nextProps.value) {
+			this.setState({ value: nextProps.value });
+			this._setHeight();
+		}
 	},
 	
 	componentDidMount(){

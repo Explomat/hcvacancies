@@ -13,14 +13,11 @@ function isFetchingCandidate(state = false, action){
 export default function candidate(state = {
 	id: null,
 	fullname: '',
-	status: '',
-	date: '',
-	cvPath: '#',
-	dateResponse: '',
-	dateInterview: '',
-	dateInvitation: '',
+	state_id: '',
+	attachment_id: '#',
 	comments: [],
-	boss: null,
+	states: [],
+	boss_state_id: null,
 	isFetching: false,
 	isFetchingBossPost: false,
 	isEditBossPost: false
