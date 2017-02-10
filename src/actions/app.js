@@ -62,19 +62,20 @@ export function getVacancy(vacancyId){
 	};
 }
 
-export function getVacancies(search, page, state_id, orderedByTitle, orderedByStatus){
+export function getVacancies(search, page, state_id, order){
 	return dispatch => {
 		dispatch({ type: constants.APP_CHANGE_TITLE, title: 'Вакансии' });
 		dispatch({ type: constants.VACANCIES_GET_VACANCIES });
 		
 		setTimeout(() => {
-			const data = getMockVacancies(search, page, state_id, orderedByTitle, orderedByStatus);
+			const data = getMockVacancies(search, page, state_id, order);
 			dispatch({
 				type: constants.VACANCIES_GET_VACANCIES_SUCCESS,
 				...data,
 				search,
 				page,
-				state_id
+				state_id,
+				order
 			});
 		}, 300);
 		/* const path = config.url.createPath({ server_name: 'Test', action_name: 'getAccess' });
@@ -93,17 +94,18 @@ export function getVacancies(search, page, state_id, orderedByTitle, orderedBySt
 	};
 }
 
-export function getVacanciesOnScroll(search, page, status, orderedByTitle, orderedByStatus){
+export function getVacanciesOnScroll(search, page, status, order){
 	return dispatch => {
 		dispatch({ type: constants.VACANCIES_GET_VACANCIES_ON_SCROLL });
 		
 		setTimeout(() => {
-			const data = getMockVacancies(search, page, status, orderedByTitle, orderedByStatus);
+			const data = getMockVacancies(search, page, status, order);
 			dispatch({
 				type: constants.VACANCIES_GET_VACANCIES_ON_SCROLL_SUCCESS,
 				vacancies:data.vacancies,
 				pagesCount: data.pagesCount,
-				page
+				page,
+				order
 			});
 		}, 300);
 		/* const path = config.url.createPath({ server_name: 'Test', action_name: 'getAccess' });

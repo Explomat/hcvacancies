@@ -66,7 +66,8 @@ export default function vacanciesData(state = {
 				statusFilter: {
 					states: concat(defaultStates, action.states || []),
 					selected: action.state_id || 'all'
-				}
+				},
+				order: action.order
 			});
 		}
 		

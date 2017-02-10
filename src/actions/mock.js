@@ -17,7 +17,7 @@ const vacancyStates = [
 ];
 
 const candidateStates = [
-	{ 'payload':'blacklist', 'text':'&quot;Черный список&quot;', 'color':'68, 68, 68' },
+	{ 'payload':'blacklist', 'text':'Черный список', 'color':'68, 68, 68' },
 	{ 'payload':'candidate_letter', 'text':'Отправлено письмо кандидату', 'color':'128, 128, 128' },
 	{ 'payload':'client_letter', 'text':'Отправлено письмо заказчику', 'color':'128, 128, 128' },
 	{ 'payload':'dismiss', 'text':'Уволен', 'color':'255, 0, 0' },
@@ -86,11 +86,40 @@ function mapStates(states){
 	return states.map(s => s.payload);
 }
 
-function filterVacancies(vacancies, search, page, state_id, orderedByTitle, orderedByStatus){
+function filterVacancies(vacancies, search, page, state_id, order){
 	const newVacancies = filter(vacancies,  v => {
 		return (~v.name.indexOf(search) && (v.state_id === state_id || state_id === 'all'));
 	});
-	const sortVacancies = !orderedByTitle ? newVacancies :
+	const [key, orderBy] = order.split(':');
+	const sortVacancies = newVacancies.sort((f, s) => {
+		if (orderBy === 'asc'){
+			if (f[key] < s[key]){
+				return -1;
+			}
+			if (f[key] > s[key]){
+				return 1;
+			}
+			return 0;
+		} else if (orderBy === 'desc') {
+			if (f[key] < s[key]){
+				return 1;
+			}
+			if (f[key] > s[key]){
+				return -1;
+			}
+			return 0;
+		}
+	});
+	
+	const sliceVacancies = sortVacancies.slice((page * limitRows),  (page * limitRows + limitRows));
+	
+	return {
+		vacancies: sliceVacancies,
+		pagesCount: Math.round(newVacancies.length / limitRows),
+		count: newVacancies.length
+	};
+	
+	/* const sortVacancies = !orderedByTitle ? newVacancies :
 	newVacancies.sort((f,  s) => {
 		if (f.name < s.name){
 			return -1;
@@ -112,37 +141,11 @@ function filterVacancies(vacancies, search, page, state_id, orderedByTitle, orde
 	});
 	const sliceVacancies = sortVacancies2.slice((page * limitRows),  (page * limitRows + limitRows));
 	
-	
-	/* return filter(vacancies,  v => {
-		return (~indexOf(v,  search) && v.status === status);
-	}).slice((page * limitRows),  (page * limitRows + limitRows))
-	.sort((f,  s) => {
-		if (orderedByTitle){
-			if (f.title < s.title){
-				return -1;
-			}
-			if (f.title > s.title){
-				return 1;
-			}
-		}
-		return 0;
-	})
-	.sort((f,  s) => {
-		if (orderedByStatus){
-			if (f.status < s.status){
-				return -1;
-			}
-			if (f.status > s.status){
-				return 1;
-			}
-		}
-		return 0;
-	});*/
 	return {
 		vacancies: sliceVacancies,
 		pagesCount: Math.round(newVacancies.length / limitRows),
 		count: newVacancies.length
-	};
+	};*/
 }
 
 function mockVacancies(){
@@ -207,8 +210,8 @@ function mockVacancies(){
 
 const vacancies = mockVacancies();
 
-export function getMockVacancies(search,  page,  status,  orderedByTitle,  orderedByStatus){
-	const data = filterVacancies(vacancies,  search,  page,  status,  orderedByTitle,  orderedByStatus);
+export function getMockVacancies(search, page, status, order){
+	const data = filterVacancies(vacancies, search, page, status, order);
 	const filteredVacancies = data.vacancies.map(v => {
 		return {
 			id: v.id,
@@ -249,7 +252,7 @@ export function getMockVacancy(vacancyId){
 	}
 }
 
-export function getMockCandidate(vacancyId,  candidateId){
+export function getMockCandidate(vacancyId, candidateId){
 	const vacancy = vacancies.filter(v => v.id.toString() === vacancyId.toString())[0];
 	if (vacancy){
 		return vacancy.candidates.filter(c => c.id.toString() === candidateId.toString())[0];

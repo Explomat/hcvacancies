@@ -4,7 +4,7 @@ import { ButtonDefault, ButtonPrimary } from './modules/button';
 import getDate from '../utils/getDate';
 import numDeclension from '../utils/numDeclension';
 
-const Comment = ({ fullname, date, status, comment }) => {
+const Comment = ({ fullname, date, state_id, comment, viewStates }) => {
 	return (
 		<div className='comment'>
 			<div className='comment__avatar'>
@@ -12,7 +12,7 @@ const Comment = ({ fullname, date, status, comment }) => {
 			</div>
 			<div className='comment__post'>
 				<div className='comment__post-header'>
-					<span className='comment__post-status'>{status}</span>
+					<span className='comment__post-status'>{viewStates[state_id].text}</span>
 					<span className='bullet'>•</span>
 					<span className='comment__post-date'>{getDate(date)}</span>
 					<div className='comment__post-author'>{fullname}</div>
@@ -103,14 +103,22 @@ class Candidate extends Component {
 	}
 	
 	render(){
-		const { fullname, status, cvPath, dateResponse, dateInterview, dateInvitation, comments, boss } = this.props;
+		const { fullname,
+			state_id,
+			cvPath,
+			dateResponse,
+			dateInterview,
+			dateInvitation,
+			comments,
+			boss,
+			viewStates } = this.props;
 		const commentsLen = comments.length;
 		return (
 			<div className='candidate'>
 				<div className='candidate__fullname'>{fullname}</div>
 				<div className='candidate___description'>
 					<span className='candidate__field-label'>Статус</span>
-					<span className='candidate__field-value'>{status}</span>
+					<span className='candidate__field-value'>{viewStates[state_id].text}</span>
 					<span className='candidate__field-label'>Дата отклика</span>
 					<span className='candidate__field-value'>{getDate(dateResponse)}</span>
 					<span className='candidate__field-label'>Дата интервью</span>
@@ -135,7 +143,7 @@ class Candidate extends Component {
 						<span>{numDeclension(commentsLen, 'Комментарий', 'Комментария', 'Комментариев')} от рекрутеров</span>
 					</div>
 					<div className='candidate__comments-list'>
-						{comments.map(c => <Comment key={c.id} {...c} />)}
+						{comments.map(c => <Comment key={c.id} viewStates={viewStates} {...c} />)}
 					</div>
 				</div>
 			</div>
