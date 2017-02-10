@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import getDate from '../utils/getDate';
+import { isInStates } from '../utils/states';
 
 class Vacancy extends Component {
 	
@@ -16,15 +17,19 @@ class Vacancy extends Component {
 	
 	render(){
 		const { id, name, state_id, start_date, candidates_count, viewStates } = this.props;
+		const inStates = isInStates(viewStates, state_id);
+		const inlineStyles = inStates ?
+			{ 'backgroundColor': `rgb(${viewStates[state_id].color})` } : null;
+		const text = inStates ? viewStates[state_id].text : 'Нет статуса';
 		return (
 			<div className='vacancies__vacancy'>
 				<Link onClick={this.handleVacancyClick} to={`vacancy/${id}`} className='no-link vacancies__link'>
 					<div className='vacancies__title'>{name}</div>
 					<span
 						className='vacancies__status'
-						style={{ 'backgroundColor': `rgb(${viewStates[state_id].color})` }}
+						style={inlineStyles}
 					>
-						{viewStates[state_id].text}
+						{text}
 					</span>
 					<span className='bullet'>•</span>
 					<span className='vacancies__date'>{getDate(start_date)}</span>

@@ -3,8 +3,10 @@ import { TextAreaView } from './modules/text-label';
 import { ButtonDefault, ButtonPrimary } from './modules/button';
 import getDate from '../utils/getDate';
 import numDeclension from '../utils/numDeclension';
+import { isInStates } from '../utils/states';
 
 const Comment = ({ fullname, date, state_id, comment, viewStates }) => {
+	const text = isInStates(viewStates, state_id) ? viewStates[state_id].text : 'Нет статуса';
 	return (
 		<div className='comment'>
 			<div className='comment__avatar'>
@@ -12,7 +14,7 @@ const Comment = ({ fullname, date, state_id, comment, viewStates }) => {
 			</div>
 			<div className='comment__post'>
 				<div className='comment__post-header'>
-					<span className='comment__post-status'>{viewStates[state_id].text}</span>
+					<span className='comment__post-status'>{text}</span>
 					<span className='bullet'>•</span>
 					<span className='comment__post-date'>{getDate(date)}</span>
 					<div className='comment__post-author'>{fullname}</div>
@@ -113,12 +115,13 @@ class Candidate extends Component {
 			boss,
 			viewStates } = this.props;
 		const commentsLen = comments.length;
+		const text = isInStates(viewStates, state_id) ? viewStates[state_id].text : 'Нет статуса';
 		return (
 			<div className='candidate'>
 				<div className='candidate__fullname'>{fullname}</div>
 				<div className='candidate___description'>
 					<span className='candidate__field-label'>Статус</span>
-					<span className='candidate__field-value'>{viewStates[state_id].text}</span>
+					<span className='candidate__field-value'>{text}</span>
 					<span className='candidate__field-label'>Дата отклика</span>
 					<span className='candidate__field-value'>{getDate(dateResponse)}</span>
 					<span className='candidate__field-label'>Дата интервью</span>

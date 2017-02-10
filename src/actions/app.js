@@ -1,7 +1,6 @@
 import { get } from '../utils/ajax';
 import config from '../config';
 import constants from '../constants';
-import { getMockVacancies, getMockVacancy, getMockCandidate, editMockBossPost } from './mock';
 
 export function error(err){
 	return {
@@ -14,21 +13,18 @@ export function getAccess(){
 	return dispatch => {
 		dispatch({ type: constants.APP_GET_ACCESS });
 		
-		/*setTimeout(() => {
-			dispatch({ type: constants.APP_GET_ACCESS_SUCCESS, response: { access: true } });
-		}, 300);*/
 		const path = config.url.createPath({ server_name: 'Test', action_name: 'getAccess' });
 		get(path)
 		.then(resp => JSON.parse(resp))
 		.then(resp => {
 			if (resp.error){
-				dispatch(errorReceive(resp.error));
+				dispatch(error(resp.error));
 			} else {
 				dispatch({ type: constants.APP_GET_ACCESS_SUCCESS, response: resp });
 			}
 		})
 		.catch(e => {
-			dispatch(errorReceive(e.message));
+			dispatch(error(e.message));
 		});
 	};
 }
@@ -38,24 +34,23 @@ export function getCandidate(vacancyId, candidateId){
 		dispatch({ type: constants.APP_CHANGE_TITLE, title: 'Кандидат' });
 		dispatch({ type: constants.CANDIDATES_GET_CANDIDATE });
 		
-		/*setTimeout(() => {
-			dispatch({
-				type: constants.CANDIDATES_GET_CANDIDATE_SUCCESS,
-				response: getMockCandidate(vacancyId, candidateId)
-			});
-		}, 300);*/
-		const path = config.url.createPath({ server_name: 'Test', action_name: 'getAccess' });
+		const path = config.url.createPath({
+			server_name: 'Test',
+			action_name: 'getCandidate',
+			vacancy_id: vacancyId,
+			candidate_id: candidateId
+		});
 		get(path, true)
 		.then(resp => JSON.parse(resp))
 		.then(resp => {
 			if (resp.error){
-				dispatch(errorReceive(resp.error));
+				dispatch(error(resp.error));
 			} else {
-				dispatch({ type: constants.APP_GET_ACCESS_SUCCESS, response: resp });
+				dispatch({ type: constants.CANDIDATES_GET_CANDIDATE_SUCCESS, response: resp });
 			}
 		})
 		.catch(e => {
-			dispatch(errorReceive(e.message));
+			dispatch(error(e.message));
 		});
 	};
 }
@@ -65,12 +60,23 @@ export function getVacancy(vacancyId){
 		dispatch({ type: constants.APP_CHANGE_TITLE, title: 'Вакансия' });
 		dispatch({ type: constants.VACANCIES_GET_VACANCY });
 		
-		setTimeout(() => {
-			dispatch({
-				type: constants.VACANCIES_GET_VACANCY_SUCCESS,
-				response: getMockVacancy(vacancyId)
-			});
-		}, 300);
+		const path = config.url.createPath({
+			server_name: 'Test',
+			action_name: 'getVacancy',
+			vacancy_id: vacancyId
+		});
+		get(path, true)
+		.then(resp => JSON.parse(resp))
+		.then(resp => {
+			if (resp.error){
+				dispatch(error(resp.error));
+			} else {
+				dispatch({ type: constants.VACANCIES_GET_VACANCY_SUCCESS, response: resp });
+			}
+		})
+		.catch(e => {
+			dispatch(error(e.message));
+		});
 	};
 }
 
@@ -79,60 +85,65 @@ export function getVacancies(search, page, state_id, order){
 		dispatch({ type: constants.APP_CHANGE_TITLE, title: 'Вакансии' });
 		dispatch({ type: constants.VACANCIES_GET_VACANCIES });
 		
-		setTimeout(() => {
-			const data = getMockVacancies(search, page, state_id, order);
-			dispatch({
-				type: constants.VACANCIES_GET_VACANCIES_SUCCESS,
-				...data,
-				search,
-				page,
-				state_id,
-				order
-			});
-		}, 300);
-		/* const path = config.url.createPath({ server_name: 'Test', action_name: 'getAccess' });
+		const path = config.url.createPath({
+			server_name: 'Test',
+			action_name: 'getVacancies',
+			search,
+			page,
+			state_id,
+			order
+		});
 		get(path, true)
 		.then(resp => JSON.parse(resp))
 		.then(resp => {
 			if (resp.error){
-				dispatch(errorReceive(resp.error));
+				dispatch(error(resp.error));
 			} else {
-				dispatch({ type: constants.APP_GET_ACCESS_SUCCESS, response: resp });
+				dispatch({
+					type: constants.VACANCIES_GET_VACANCIES_SUCCESS,
+					...resp,
+					search,
+					page,
+					state_id,
+					order
+				});
 			}
 		})
 		.catch(e => {
-			dispatch(errorReceive(e.message));
-		});*/
+			dispatch(error(e.message));
+		});
 	};
 }
 
-export function getVacanciesOnScroll(search, page, status, order){
+export function getVacanciesOnScroll(search, page, state_id, order){
 	return dispatch => {
 		dispatch({ type: constants.VACANCIES_GET_VACANCIES_ON_SCROLL });
 		
-		setTimeout(() => {
-			const data = getMockVacancies(search, page, status, order);
-			dispatch({
-				type: constants.VACANCIES_GET_VACANCIES_ON_SCROLL_SUCCESS,
-				vacancies:data.vacancies,
-				pagesCount: data.pagesCount,
-				page,
-				order
-			});
-		}, 300);
-		/* const path = config.url.createPath({ server_name: 'Test', action_name: 'getAccess' });
+		const path = config.url.createPath({
+			server_name: 'Test',
+			action_name: 'getVacancies',
+			search,
+			page,
+			state_id,
+			order
+		});
 		get(path, true)
 		.then(resp => JSON.parse(resp))
 		.then(resp => {
 			if (resp.error){
-				dispatch(errorReceive(resp.error));
+				dispatch(error(resp.error));
 			} else {
-				dispatch({ type: constants.APP_GET_ACCESS_SUCCESS, response: resp });
+				dispatch({
+					type: constants.VACANCIES_GET_VACANCIES_ON_SCROLL_SUCCESS,
+					...resp,
+					page,
+					order
+				});
 			}
 		})
 		.catch(e => {
-			dispatch(errorReceive(e.message));
-		});*/
+			dispatch(error(e.message));
+		});
 	};
 }
 
@@ -143,14 +154,14 @@ export function editBossPost(vacancyId, candidateId, post){
 			return;
 		}
 		
-		dispatch({ type: constants.CANDIDATES_EDIT_BOSS_POST });
+		/* dispatch({ type: constants.CANDIDATES_EDIT_BOSS_POST });
 		setTimeout(() => {
 			dispatch(error(null));
 			dispatch({
 				type: constants.CANDIDATES_EDIT_BOSS_POST_SUCCESS,
 				candidate: editMockBossPost(vacancyId, candidateId, post)
 			});
-		}, 300);
+		}, 300);*/
 	};
 }
 

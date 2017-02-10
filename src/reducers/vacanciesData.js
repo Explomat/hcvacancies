@@ -50,7 +50,7 @@ export default function vacanciesData(state = {
 		states: defaultStates,
 		selected: 'all'
 	},
-	order: 'name:asc'
+	order: 'start_date:desc'
 					
 }, action) {
 	switch (action.type) {

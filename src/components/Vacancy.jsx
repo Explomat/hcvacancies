@@ -2,8 +2,13 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import numDeclension from '../utils/numDeclension';
 import getDate from '../utils/getDate';
+import { isInStates } from '../utils/states';
 
 const Candidate = ({ id, vacancyId, fullname, state_id, comments_count, viewCandidateStates }) => {
+	const inStates = isInStates(viewCandidateStates, state_id);
+	const inlineStyles = inStates ?
+			{ 'backgroundColor': `rgb(${viewCandidateStates[state_id].color})` } : null;
+	const text = inStates ? viewCandidateStates[state_id].text : 'Нет статуса';
 	return (
 		<div className='vacancy__candidate'>
 			<Link to={`vacancy/${vacancyId}/${id}`} className='no-link vacancy__candidate-link'>
@@ -16,9 +21,9 @@ const Candidate = ({ id, vacancyId, fullname, state_id, comments_count, viewCand
 				</span>*/}
 				<span
 					className='vacancy__candidate-status'
-					style={{ 'backgroundColor': `rgb(${viewCandidateStates[state_id].color})` }}
+					style={inlineStyles}
 				>
-					{viewCandidateStates[state_id].text}
+					{text}
 				</span>
 				<div className='vacancy__candidate-additional'>
 					<i className='icon-comment vacancy__candidate-additional-comment-icon'/>
@@ -33,12 +38,13 @@ class Vacancy extends Component {
 	render(){
 		const { id, name, state_id, start_date, candidates, viewVacancyStates, viewCandidateStates } = this.props;
 		const candidateLen = candidates.length;
+		const text = isInStates(viewVacancyStates, state_id) ? viewVacancyStates[state_id].text : '';
 		return (
 			<div className='vacancy'>
 				<div className='vacancy__title'>{name}</div>
 				<div className='vacancy__description'>
 					<span className='vacancy__field-label'>Статус</span>
-					<span className='vacancy__field-value'>{viewVacancyStates[state_id].text}</span>
+					<span className='vacancy__field-value'>{text}</span>
 					<span className='vacancy__field-label'>Дата создания</span>
 					<span className='vacancy__field-value'>{getDate(start_date)}</span>
 				</div>

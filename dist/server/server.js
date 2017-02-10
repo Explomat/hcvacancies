@@ -1,3 +1,10 @@
+<%
+
+Server.Execute("include/user_init.html");
+
+DropFormsCache('x-local:/wt/web/common/wl_library.js');
+var wl = OpenCodeLib('x-local:/wt/web/common/wl_library.js');
+
 function __isConnectOpen(connection){
 	return (connection != undefined && connection != null) && connection.state != null && connection.state != 0;
 }
@@ -15,7 +22,7 @@ function __connect(){
 }
 
 function __fetchData(recordSet){
-	var arrResult = Array();
+	var arrResult = [];
 	
 	if(!recordSet.EOF)
 	{
@@ -37,16 +44,20 @@ function _toJSON(obj){
 	return tools.object_to_text(obj, 'json');
 }
 
-function _vacanciesCount(connection, search, states, limitRows){
+function _vacanciesCount(connection, userHexId, search, states, limitRows){
 	var query = "
 		select 
 		COUNT(*)/"+limitRows+" pages_count,
 		COUNT(*) count 
 	from 
 		vacancies 
+	inner join persons p on p.id = vacancies.rr_persons.value('(rr_persons/rr_person/person_id)[1]','varchar(max)')
 	where 
-		vacancies.state_id in ('" + states + "') and 
-		vacancies.name LIKE '%" + search + "%'";
+		vacancies.name LIKE '%" + search + "%'
+				and vacancies.state_id in ('" + states + "')
+				and p.eid is not null
+				and p.eid <> ''
+				and p.eid = '" + userHexId + "'";
 	var recordSet = connection.Execute(query);
 	return __fetchData(recordSet)[0];
 }
@@ -60,7 +71,11 @@ function _vacancies(connection, userHexId, search, page, states, order, limitRow
 		REPLACE(v.name, '\"', '') as name,
 		v.state_id,
 		v.start_date,
-		v.candidates_count
+		(select COUNT(c.id)
+		from candidates c 
+		where c.id in 
+		(select DISTINCT(e.candidate_id) from events e 
+		where e.vacancy_id = v.id)) as candidates_count
 		
 		from (
 			select ROW_NUMBER() OVER(ORDER BY vacancies." + orders[0] + " " + orders[1] + ") rowNum, 
@@ -110,7 +125,11 @@ function _vacancy(connection, vacancyId){
 	if (vacancyData != undefined){
 		var candidatesQuery = "
 			select c.id, c.fullname, c.state_id, 
-			(select COUNT(e.id) from events e where e.candidate_id = c.id) as comments_count 
+			(select COUNT(e.id) 
+				from events e 
+				where e.candidate_id = c.id 
+				and e.vacancy_id = " + vacancyData.id  + "
+			)as comments_count 
 			from candidates c 
 			where c.id in 
 			(select DISTINCT(e.candidate_id) from events e 
@@ -191,10 +210,11 @@ function _candidate(connection, vacancyId, candidateId){
 				when e.occurrence_id <> '' then e.type_id + ':' + e.occurrence_id
 			end state_id
 			from events e
-			inner join users u on u.id = e.user_id
+			left join users u on u.id = e.user_id
 			inner join candidates c on c.id = e.candidate_id
 			where e.vacancy_id = " + vacancyId + "
-			and e.candidate_id = " + candidateId;
+			and e.candidate_id = " + candidateId + "
+			order by e.date desc";
 		var commentsRecordSet = connection.Execute(commentsQuery);
 		var commentsData = __fetchData(commentsRecordSet);
 		var candidateStates = _candidateStates(connection);
@@ -216,7 +236,7 @@ function _bossCommentForCandidate(){
 }
 
 function getAccess(){
-	return { access: true };
+	return  wl.getResult({ access: true });
 }
 
 function getVacancies(queryObjects){
@@ -227,31 +247,34 @@ function getVacancies(queryObjects){
 		var vacancyStates = _vacancyStates(connection);
 		
 		var search = queryObjects.HasProperty('search') ? queryObjects.search : '';
-		var page = queryObjects.HasProperty('page') ? queryObjects.page : 0;
+		var page = queryObjects.HasProperty('page') ? Int(queryObjects.page) : 0;
 		var states = 
-			queryObjects.HasProperty('states') ? 
-			(queryObjects.states == 'all' ?
+			queryObjects.HasProperty('state_id') ? 
+			(queryObjects.state_id == 'all' ?
 			ArrayMerge(vacancyStates, 'This.payload', '\',\'') :
-			queryObjects.states) :
+			queryObjects.state_id) :
 			ArrayMerge(vacancyStates, 'This.payload', '\',\'');
+		var order = queryObjects.HasProperty('order') ? queryObjects.order : 'start_date:desc';
+		var limitRows = queryObjects.HasProperty('limit_rows') ? Int(queryObjects.limit_rows) : DEFAULT_LIMIT_ROWS;
 		
-		var order = queryObjects.HasProperty('order') ? queryObjects.order : 'name:asc';
-		var limitRows = queryObjects.HasProperty('limit_rows') ? queryObjects.limit_rows : DEFAULT_LIMIT_ROWS;
-		
-		var vacanciesCount = _vacanciesCount(connection, search, states, limitRows);
+		var vacanciesCount = _vacanciesCount(connection, '0x36726E0B10161F00', search, states, limitRows);
 		//var vc = _vacancies(connection, search, page, status, orderedByTitle, orderedByStatus, limitRows);
 		//alert('vacancies: ' + _toJSON(vc));
-		alert(_toJSON({
-			vacancies: _vacancies(connection, '0x36726E0B10161F00', search, page, states, order, limitRows),
+		var vs = _vacancies(connection, '0x36726E0B10161F00', search, page, states, order, limitRows);
+		//alert('vacancies: ' + _toJSON(vs));
+		return _toJSON({
+			vacancies: vs,
 			pages_count: vacanciesCount.pages_count,
 			count: vacanciesCount.count,
 			states: vacancyStates
-		}));
+		});
 	} catch (e){
 		if (connection != null){
 			__closeConnect(connection);
 		}
-		alert(e);
+		return wl.getResult({
+			error: wl.trimException(e)
+		});
 	}
 }
 
@@ -265,12 +288,15 @@ function getVacancy(queryObjects){
 		}
 		connection = __connect();
 		var vacancy = _vacancy(connection, vacancyId);
-		alert(_toJSON(vacancy));
+		return _toJSON(vacancy);
+		//alert(_toJSON(vacancy));
 	} catch (e){
 		if (connection != null){
 			__closeConnect(connection);
 		}
-		alert(e);
+		return wl.getResult({
+			error: wl.trimException(e)
+		});
 	}
 }
 
@@ -285,12 +311,14 @@ function getCandidate(queryObjects){
 		}
 		connection = __connect();
 		var candidate = _candidate(connection, vacancyId, candidateId);
-		alert(_toJSON(candidate));
+		return _toJSON(candidate);
 	} catch (e){
 		if (connection != null){
 			__closeConnect(connection);
 		}
-		alert(e);
+		return wl.getResult({
+			error: wl.trimException(e)
+		});
 	}
 }
 
@@ -336,6 +364,4 @@ function updateBossCommentForCandidate(queryObjects){
 	}
 }
 
-getVacancies({});
-getVacancy({vacancy_id: 20687982340604723});
-getCandidate({vacancy_id: 5617996101482139474, candidate_id: 1193842844893290933});
+%>
