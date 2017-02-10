@@ -18,7 +18,7 @@ export default function candidate(state = {
 	comments: [],
 	states: [],
 	boss_state_id: null,
-	isFetching: false,
+	isFetching: true,
 	isFetchingBossPost: false,
 	isEditBossPost: false
 }, action) {

@@ -27,8 +27,8 @@ class VacanciesContainer extends Component {
 	}
 	
 	componentDidMount(){
-		const { search, statusFilter, orderedByTitle, orderedByStatus } = this.props;
-		this._getVacancies(search, 0, statusFilter.selected, orderedByTitle, orderedByStatus);
+		const { search, statusFilter, order } = this.props;
+		this._getVacancies(search, 0, statusFilter.selected, order);
 		window.addEventListener('scroll', this._srollDown);
 		window.addEventListener('scroll', this._toggleUpIcon);
 	}
@@ -39,42 +39,24 @@ class VacanciesContainer extends Component {
 	}
 	
 	handleSearch(val){
-		const { statusFilter, orderedByTitle, orderedByStatus } = this.props;
-		this._getVacancies(val, 0, statusFilter.selected, orderedByTitle, orderedByStatus);
+		const { statusFilter, order } = this.props;
+		this._getVacancies(val, 0, statusFilter.selected, order);
 	}
 	
 	handleChangeStatus(e, payload){
-		const { search, orderedByTitle, orderedByStatus  } = this.props;
-		this._getVacancies(search, 0, payload, orderedByTitle, orderedByStatus);
+		const { search, order } = this.props;
+		this._getVacancies(search, 0, payload, order);
 	}
 	
 	handleSortByTitle(e, payload){
-		const { search, statusFilter, orderedByStatus } = this.props;
-		this._getVacancies(search, 0, statusFilter.selected, payload, orderedByStatus);
+		const { search, statusFilter } = this.props;
+		this._getVacancies(search, 0, statusFilter.selected, payload);
 	}
 	
 	handleSortByStatus(e, payload){
-		const { search, statusFilter, orderedByTitle } = this.props;
-		this._getVacancies(search, 0, statusFilter.selected, orderedByTitle, payload);
+		const { search, statusFilter } = this.props;
+		this._getVacancies(search, 0, statusFilter.selected, payload);
 	}
-	
-	/* _setUpButtonPosition(){
-		const btn = this.refs.iconTop;
-		const documentHeight = document.documentElement.clientHeight;
-		console.log('documentHeight: ' + documentHeight);
-		const contHeight = this.refs.vacanciesContainer.clientHeight;
-		console.log('contHeight: ' + contHeight);
-		const scrollTop = this.refs.vacanciesContainer.getBoundingClientRect().top;
-		console.log('scrollTop: ' + scrollTop);
-
-		if (contHeight > documentHeight) {
-			const hiddentTestsHeight = contHeight - documentHeight;
-			console.log('hiddentTestsHeight: ' + hiddentTestsHeight);
-			const visibleTestsHeight = contHeight - hiddentTestsHeight;
-			console.log('visibleTestsHeight: ' + visibleTestsHeight);
-			btn.style.top = (visibleTestsHeight - btn.offsetHeight - scrollTop - 50) + 'px';
-		}
-	}*/
 	
 	_toggleUpIcon() {
 		this.setState({
@@ -87,14 +69,14 @@ class VacanciesContainer extends Component {
 		const clientHeight = document.documentElement.clientHeight;
 		const offset = window.pageYOffset;
 		
-		const { isFetchingScroll, search, page, pages_count, statusFilter, orderedByTitle, orderedByStatus } = this.props;
+		const { isFetchingScroll, search, page, pages_count, statusFilter, order } = this.props;
 		if (scrollHeight - (clientHeight + offset) < 100 && !isFetchingScroll && (page + 1) <= pages_count) {
-			this.props.getVacanciesOnScroll(search, page + 1, statusFilter.selected, orderedByTitle, orderedByStatus);
+			this.props.getVacanciesOnScroll(search, page + 1, statusFilter.selected, order);
 		}
 	}
 	
-	_getVacancies(search, page, statusFilter, orderedByTitle, orderedByStatus){
-		this.props.getVacancies(search, page, statusFilter, orderedByTitle, orderedByStatus);
+	_getVacancies(search, page, statusFilter, order){
+		this.props.getVacancies(search, page, statusFilter, order);
 	}
 	
 	render(){
@@ -139,22 +121,22 @@ class VacanciesContainer extends Component {
 							>
 								<DropDownIconItem
 									onClick={this.handleSortByTitle}
-									payload
+									payload={'name:asc'}
 									text='По названию (А-я)'
 								/>
 								<DropDownIconItem
 									onClick={this.handleSortByTitle}
-									payload={false}
+									payload={'name:desc'}
 									text='По названию (я-А)'
 								/>
 								<DropDownIconItem
 									onClick={this.handleSortByStatus}
-									payload
+									payload={'state_id:asc'}
 									text='По статусу (А-я)'
 								/>
 								<DropDownIconItem
 									onClick={this.handleSortByStatus}
-									payload={false}
+									payload={'state_id:desc'}
 									text='По статусу (я-А)'
 								/>
 							</DropDownIcon>
