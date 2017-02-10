@@ -7,7 +7,11 @@ addServer({ id: '6322023433485303550', name: 'Test' })
 .addActions(
 	[
 		'getAccess',
-		'search'
+		'getVacancies',
+		'getVacancy',
+		'getCandidate',
+		'getCandidateResume',
+		'updateBossCommentForCandidate'
 	]
 );
 
@@ -39,10 +43,6 @@ const obj = {
 
 	dom: {
 		appId: 'app'
-	},
-
-	hashes: {
-		boilerplate: 'boilerplate'
 	}
 };
 

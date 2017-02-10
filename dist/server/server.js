@@ -215,6 +215,10 @@ function _bossCommentForCandidate(){
 	
 }
 
+function getAccess(){
+	return { access: true };
+}
+
 function getVacancies(queryObjects){
 	var DEFAULT_LIMIT_ROWS = 15;
 	var connection = null;
@@ -270,6 +274,26 @@ function getVacancy(queryObjects){
 	}
 }
 
+function getCandidate(queryObjects){
+	var vacancyId = queryObjects.HasProperty('vacancy_id') ? queryObjects.vacancy_id : null;
+	var candidateId = queryObjects.HasProperty('candidate_id') ? queryObjects.candidate_id : null;
+	var connection = null;
+	
+	try {
+		if (vacancyId == null || candidateId == null){
+			throw "Неверные входные данные!";
+		}
+		connection = __connect();
+		var candidate = _candidate(connection, vacancyId, candidateId);
+		alert(_toJSON(candidate));
+	} catch (e){
+		if (connection != null){
+			__closeConnect(connection);
+		}
+		alert(e);
+	}
+}
+
 function getCandidateResume(queryObjects){
 	var attachmentId = queryObjects.HasProperty('attachment_id') ? queryObjects.attachment_id : null;
 	var connection = null;
@@ -285,26 +309,6 @@ function getCandidateResume(queryObjects){
 		Request.AddRespHeader("Content-Disposition","attachment; filename=resume.html");
 		return fileData;
 	} catch(e){
-		if (connection != null){
-			__closeConnect(connection);
-		}
-		alert(e);
-	}
-}
-
-function getCandidate(queryObjects){
-	var vacancyId = queryObjects.HasProperty('vacancy_id') ? queryObjects.vacancy_id : null;
-	var candidateId = queryObjects.HasProperty('candidate_id') ? queryObjects.candidate_id : null;
-	var connection = null;
-	
-	try {
-		if (vacancyId == null || candidateId == null){
-			throw "Неверные входные данные!";
-		}
-		connection = __connect();
-		var candidate = _candidate(connection, vacancyId, candidateId);
-		alert(_toJSON(candidate));
-	} catch (e){
 		if (connection != null){
 			__closeConnect(connection);
 		}

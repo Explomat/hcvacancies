@@ -1,5 +1,5 @@
-// import { get } from '../utils/ajax';
-// import config from '../config';
+import { get } from '../utils/ajax';
+import config from '../config';
 import constants from '../constants';
 import { getMockVacancies, getMockVacancy, getMockCandidate, editMockBossPost } from './mock';
 
@@ -14,11 +14,37 @@ export function getAccess(){
 	return dispatch => {
 		dispatch({ type: constants.APP_GET_ACCESS });
 		
-		setTimeout(() => {
-			// dispatch(errorReceive('Error'));
+		/*setTimeout(() => {
 			dispatch({ type: constants.APP_GET_ACCESS_SUCCESS, response: { access: true } });
-		}, 300);
-		/* const path = config.url.createPath({ server_name: 'Test', action_name: 'getAccess' });
+		}, 300);*/
+		const path = config.url.createPath({ server_name: 'Test', action_name: 'getAccess' });
+		get(path)
+		.then(resp => JSON.parse(resp))
+		.then(resp => {
+			if (resp.error){
+				dispatch(errorReceive(resp.error));
+			} else {
+				dispatch({ type: constants.APP_GET_ACCESS_SUCCESS, response: resp });
+			}
+		})
+		.catch(e => {
+			dispatch(errorReceive(e.message));
+		});
+	};
+}
+
+export function getCandidate(vacancyId, candidateId){
+	return dispatch => {
+		dispatch({ type: constants.APP_CHANGE_TITLE, title: 'Кандидат' });
+		dispatch({ type: constants.CANDIDATES_GET_CANDIDATE });
+		
+		/*setTimeout(() => {
+			dispatch({
+				type: constants.CANDIDATES_GET_CANDIDATE_SUCCESS,
+				response: getMockCandidate(vacancyId, candidateId)
+			});
+		}, 300);*/
+		const path = config.url.createPath({ server_name: 'Test', action_name: 'getAccess' });
 		get(path, true)
 		.then(resp => JSON.parse(resp))
 		.then(resp => {
@@ -30,21 +56,7 @@ export function getAccess(){
 		})
 		.catch(e => {
 			dispatch(errorReceive(e.message));
-		});*/
-	};
-}
-
-export function getCandidate(vacancyId, candidateId){
-	return dispatch => {
-		dispatch({ type: constants.APP_CHANGE_TITLE, title: 'Кандидат' });
-		dispatch({ type: constants.CANDIDATES_GET_CANDIDATE });
-		
-		setTimeout(() => {
-			dispatch({
-				type: constants.CANDIDATES_GET_CANDIDATE_SUCCESS,
-				response: getMockCandidate(vacancyId, candidateId)
-			});
-		}, 300);
+		});
 	};
 }
 
