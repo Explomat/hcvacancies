@@ -406,7 +406,7 @@ function postUpdateBossCommentForCandidate(queryObjects){
 			)
 			values (
 				@max_id,
-				" + _BOSS_COMMENT_TYPE + ",
+				'" + _BOSS_COMMENT_TYPE + "',
 				0,
 				@cur_date,
 				'',
@@ -426,7 +426,7 @@ function postUpdateBossCommentForCandidate(queryObjects){
 				'',
 				0,
 				0,
-				" + comment + ",
+				'" + comment + "',
 				'',
 				5772372211046558130,
 				@cur_date,
