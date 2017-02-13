@@ -2,6 +2,10 @@
 
 Server.Execute("include/user_init.html");
 
+
+var _USER = '0x4FE3642B21CA0903'; //0x4D6D286F215A332B
+var _BOSS_COMMENT_TYPE = 'interview';
+
 DropFormsCache('x-local:/wt/web/common/wl_library.js');
 var wl = OpenCodeLib('x-local:/wt/web/common/wl_library.js');
 
@@ -133,7 +137,8 @@ function _vacancy(connection, vacancyId){
 			from candidates c 
 			where c.id in 
 			(select DISTINCT(e.candidate_id) from events e 
-			where e.vacancy_id = " + vacancyData.id + ")";
+			where e.vacancy_id = " + vacancyData.id + ")
+			order by c.state_id";
 		var candidatesRecordSet = connection.Execute(candidatesQuery);
 		var candidatesData = __fetchData(candidatesRecordSet);
 		return {
@@ -168,7 +173,7 @@ function _candidateResume(connection, attachmentId){
 	return __fetchData(recordSet)[0];
 }
 
-function _candidate(connection, vacancyId, candidateId){
+function _candidate(connection, vacancyId, candidateId, objectId, serverId){
 	
 	function _candidateAttachmentId(attachmentsStr){
 		
@@ -225,14 +230,10 @@ function _candidate(connection, vacancyId, candidateId){
 			attachment_id: _candidateAttachmentId(candidateData.attachments),
 			comments: commentsData,
 			states: candidateStates,
-			boss_state_id: 'test'
+			boss_state_id: _BOSS_COMMENT_TYPE
 		}
 	}
 	return null;
-}
-
-function _bossCommentForCandidate(){
-	
 }
 
 function getAccess(){
@@ -257,10 +258,10 @@ function getVacancies(queryObjects){
 		var order = queryObjects.HasProperty('order') ? queryObjects.order : 'start_date:desc';
 		var limitRows = queryObjects.HasProperty('limit_rows') ? Int(queryObjects.limit_rows) : DEFAULT_LIMIT_ROWS;
 		
-		var vacanciesCount = _vacanciesCount(connection, '0x36726E0B10161F00', search, states, limitRows);
+		var vacanciesCount = _vacanciesCount(connection, _USER, search, states, limitRows);
 		//var vc = _vacancies(connection, search, page, status, orderedByTitle, orderedByStatus, limitRows);
 		//alert('vacancies: ' + _toJSON(vc));
-		var vs = _vacancies(connection, '0x36726E0B10161F00', search, page, states, order, limitRows);
+		var vs = _vacancies(connection, _USER, search, page, states, order, limitRows);
 		//alert('vacancies: ' + _toJSON(vs));
 		return _toJSON({
 			vacancies: vs,
@@ -271,6 +272,7 @@ function getVacancies(queryObjects){
 	} catch (e){
 		if (connection != null){
 			__closeConnect(connection);
+			connection = null;
 		}
 		return wl.getResult({
 			error: wl.trimException(e)
@@ -293,6 +295,7 @@ function getVacancy(queryObjects){
 	} catch (e){
 		if (connection != null){
 			__closeConnect(connection);
+			connection = null;
 		}
 		return wl.getResult({
 			error: wl.trimException(e)
@@ -303,6 +306,8 @@ function getVacancy(queryObjects){
 function getCandidate(queryObjects){
 	var vacancyId = queryObjects.HasProperty('vacancy_id') ? queryObjects.vacancy_id : null;
 	var candidateId = queryObjects.HasProperty('candidate_id') ? queryObjects.candidate_id : null;
+	var objectId = queryObjects.HasProperty('object_id') ? queryObjects.object_id : null;
+	var serverId = queryObjects.HasProperty('server_id') ? queryObjects.server_id : null;
 	var connection = null;
 	
 	try {
@@ -310,11 +315,12 @@ function getCandidate(queryObjects){
 			throw "Неверные входные данные!";
 		}
 		connection = __connect();
-		var candidate = _candidate(connection, vacancyId, candidateId);
+		var candidate = _candidate(connection, vacancyId, candidateId, objectId, serverId);
 		return _toJSON(candidate);
 	} catch (e){
 		if (connection != null){
 			__closeConnect(connection);
+			connection = null;
 		}
 		return wl.getResult({
 			error: wl.trimException(e)
@@ -332,34 +338,119 @@ function getCandidateResume(queryObjects){
 		connection = __connect();
 		var resume = _candidateResume(connection, attachmentId);
 		
-		var fileData = LoadFileData(ROOT_DIRECTORY + '\\'+ curUserID+'\\'+ fileName);
-		Request.RespContentType = 'text/html';
-		Request.AddRespHeader("Content-Disposition","attachment; filename=resume.html");
-		return fileData;
+		if (resume != undefined){
+			Request.RespContentType = 'text/html';
+			Request.AddRespHeader("Content-Disposition","attachment; filename=resume.html");
+			return resume.data;
+		}
 	} catch(e){
 		if (connection != null){
 			__closeConnect(connection);
+			connection = null;
 		}
 		alert(e);
 	}
 }
 
-function updateBossCommentForCandidate(queryObjects){
+function postUpdateBossCommentForCandidate(queryObjects){
 	var connection = null;
 	try {
 		var data = tools.read_object(queryObjects.Body);
 		var vacancyId = data.HasProperty('vacancy_id') ? data.vacancy_id : null;
 		var candidateId = data.HasProperty('candidate_id') ? data.candidate_id : null;
 		var comment = data.HasProperty('comment') ? data.comment : null;
+		var objectId = queryObjects.HasProperty('object_id') ? queryObjects.object_id : null;
+		var serverId = queryObjects.HasProperty('server_id') ? queryObjects.server_id : null;
 		
 		if (vacancyId == null || candidateId == null || comment == null){
 			throw "Неверные входные данные!";
 		}
 		connection = __connect();
+		//connection.BeginTrans();
+		var query = "
+			declare @max_id bigint = (select MAX(id) + 1 from events)
+			declare @cur_date datetime = GETDATE()
+			insert into events (
+				id,
+				type_id,
+				is_derived,
+				date,
+				subject,
+				eid,
+				outlook_eid,
+				inet_uid,
+				occurrence_id,
+				target_object_type_id,
+				show_in_calendar,
+				person_id,
+				participants,
+				location_id,
+				idata_location_id,
+				
+				road_time,
+				return_road_time,
+				web_url,
+				participant_web_url,
+
+				use_reminder,
+				reminder_type_id,
+				comment,
+				attachments,
+				user_id,
+				creation_date,
+				last_mod_date,
+				candidate_id,
+				vacancy_id,
+				is_rr_poll,
+				is_testing
+			)
+			values (
+				@max_id,
+				" + _BOSS_COMMENT_TYPE + ",
+				0,
+				@cur_date,
+				'',
+				'',
+				'',
+				'',
+				'',
+				'candidate',
+				1,
+				" + candidateId + ",
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				0,
+				0,
+				" + comment + ",
+				'',
+				5772372211046558130,
+				@cur_date,
+				@cur_date,
+				" + candidateId + ",
+				" + vacancyId + ",
+				'',
+				''
+			)
+		"
+		connection.Execute(query);
+		//connection.CommitTrans();
+		
+		var candidate = _candidate(connection, vacancyId, candidateId, objectId, serverId);
+		return _toJSON(candidate);
 	} catch (e){
 		if (connection != null){
+			//connection.RollbackTrans();
 			__closeConnect(connection);
+			connection = null;
 		}
+		return _toJSON({
+			error: wl.trimException(e)
+		});
 		alert(e);
 	}
 }

@@ -1,17 +1,17 @@
 import { addServer, getAll } from  './servers';
 
-const routerId = '6238833803725312131';
+const routerId = '6385385939497347608';
 const customBaseUrl = process.env.NODE_ENV === 'production' ? '/custom_web_template.html' : 'http://study.merlion.ru/custom_web_template.html';
 
 addServer({ id: '6383951988069964446', name: 'Test' })
 .addActions(
 	[
-		'getAccess',
-		'getVacancies',
-		'getVacancy',
-		'getCandidate',
-		'getCandidateResume',
-		'updateBossCommentForCandidate'
+		'Access',
+		'Vacancies',
+		'Vacancy',
+		'Candidate',
+		'CandidateResume',
+		'UpdateBossCommentForCandidate'
 	]
 );
 

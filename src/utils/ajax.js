@@ -1,4 +1,4 @@
-const AJAX_TIME_OVER = 15000;
+const AJAX_TIME_OVER = 30000;
 const CACHE_MAX_REQUESTS = 30;
 let cache = {};
 

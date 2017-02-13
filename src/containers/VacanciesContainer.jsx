@@ -16,6 +16,7 @@ class VacanciesContainer extends Component {
 		this.handleChangeStatus = this.handleChangeStatus.bind(this);
 		this.handleSortByTitle = this.handleSortByTitle.bind(this);
 		this.handleSortByStatus = this.handleSortByStatus.bind(this);
+		this.handleSortByDate = this.handleSortByDate.bind(this);
 		this._getVacancies = this._getVacancies.bind(this);
 		
 		this._srollDown = this._srollDown.bind(this);
@@ -54,6 +55,11 @@ class VacanciesContainer extends Component {
 	}
 	
 	handleSortByStatus(e, payload){
+		const { search, statusFilter } = this.props;
+		this._getVacancies(search, 0, statusFilter.selected, payload);
+	}
+	
+	handleSortByDate(e, payload){
 		const { search, statusFilter } = this.props;
 		this._getVacancies(search, 0, statusFilter.selected, payload);
 	}
@@ -138,6 +144,16 @@ class VacanciesContainer extends Component {
 									onClick={this.handleSortByStatus}
 									payload={'state_id:desc'}
 									text='По статусу (я-А)'
+								/>
+								<DropDownIconItem
+									onClick={this.handleSortByDate}
+									payload={'start_date:asc'}
+									text='По дате &#8593;'
+								/>
+								<DropDownIconItem
+									onClick={this.handleSortByDate}
+									payload={'start_date:desc'}
+									text='По дате &#8595;'
 								/>
 							</DropDownIcon>
 						</div>

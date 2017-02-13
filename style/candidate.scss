@@ -14,7 +14,7 @@
 		}
 		.candidate___description{
 			padding: 0;
-		    margin: 0 -10px 24px 0;
+		    margin: 0 0 24px 0;
 		    font-size: 15px;
 		    line-height: 18px;
 		    overflow: hidden;
@@ -29,6 +29,7 @@
 			.candidate__field-value{
 				float: left;
 			    margin: 0 0 10px;
+			    color: #444;
 			}
 		}
 		.candidate__boss-is-comment{
@@ -44,6 +45,7 @@
 			    display: inline-block;
 			}
 			.candidate__boss-comment-container{
+				margin-bottom: 32px;
 				
 				.candidate__boss-comment-cancel{
 					margin-right: 8px;
@@ -116,6 +118,10 @@
 					background-color: #edeef2;
 		    		padding: 12px;
 		    		margin-bottom: 12px;
+		    		
+		    		&--boss {
+		    			background-color: #d4ddef;
+		    		}
 		    		
 					.comment__avatar{
 						font-size: 1.5em;
