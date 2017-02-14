@@ -15,7 +15,7 @@ export default function candidate(state = {
 	fullname: '',
 	state_id: '',
 	attachment_id: '#',
-	comment: '',
+	newComment: '',
 	comments: [],
 	states: [],
 	boss_state_id: null,

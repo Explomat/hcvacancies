@@ -3,7 +3,7 @@
 Server.Execute("include/user_init.html");
 
 
-var _USER = '0x4FE3642B21CA0903'; //0x4D6D286F215A332B
+var _USER = '0x4E3C33127FC024AF';  //'0x4FE3642B21CA0903' - тест; //0x4D6D286F215A332B
 var _BOSS_COMMENT_TYPE = 'interview';
 
 DropFormsCache('x-local:/wt/web/common/wl_library.js');
@@ -66,6 +66,71 @@ function _vacanciesCount(connection, userHexId, search, states, limitRows){
 	return __fetchData(recordSet)[0];
 }
 
+function _vacancyStates(connection){
+	var query = "
+		select vs.id as payload, vs.name as text,	
+		case
+			when vs.text_color = '' then '128,128,128'
+			when vs.text_color <> '' then vs.text_color
+		end color
+
+		from vacancy_states vs";
+	
+	var recordSet = connection.Execute(query);
+	return __fetchData(recordSet);
+}
+
+function _candidateStates(connection){
+	var query = "
+		select cs.id as payload, cs.name as text,
+		case
+			when cs.text_color = '' then '128,128,128'
+			when cs.text_color = 'black' then '68,68,68'
+			when cs.text_color <> '' then cs.text_color
+		end color
+		from candidate_states cs";
+	var recordSet = connection.Execute(query);
+	return __fetchData(recordSet);
+}
+
+function _eventTypes(connection){
+	var query = "
+		select et.id as payload, et.name as text,
+		case
+			when et.text_color = '' then '128,128,128'
+			when et.text_color = 'black' then '68,68,68'
+			when et.text_color <> '' then et.text_color
+		end color
+		from event_types et";
+	var recordSet = connection.Execute(query);
+	return __fetchData(recordSet);
+}
+
+function _unionStates(connection){
+	var query = "
+		select et.id as payload, et.name as text,
+		case
+			when et.text_color = '' then '128,128,128'
+			when et.text_color = 'black' then '68,68,68'
+			when et.text_color <> '' then et.text_color
+		end color
+		from event_types et
+		where et.id not in (select cs.id from candidate_states cs)
+		and et.is_active = 1
+
+		union all
+
+		select cs.id as payload, cs.name as text,
+		case
+			when cs.text_color = '' then '128,128,128'
+			when cs.text_color = 'black' then '68,68,68'
+			when cs.text_color <> '' then cs.text_color
+		end color
+		from candidate_states cs";
+	var recordSet = connection.Execute(query);
+	return __fetchData(recordSet);
+}
+
 function _vacancies(connection, userHexId, search, page, states, order, limitRows){
 	var orders = order.split(':');
 	var query = "
@@ -104,21 +169,6 @@ function _vacancies(connection, userHexId, search, page, states, order, limitRow
 	return __fetchData(recordSet);
 }
 
-function _vacancyStates(connection){
-	var query = "
-		select vs.id as payload, vs.name as text,	
-		case
-			when vs.text_color = '' then '128,128,128'
-			when vs.text_color <> '' then vs.text_color
-		end color
-
-		from vacancy_states vs
-		where vs.is_active = 1";
-	
-	var recordSet = connection.Execute(query);
-	return __fetchData(recordSet);
-}
-
 function _vacancy(connection, vacancyId){
 	var vacancyQuery = "
 		select v.id, v.name, v.state_id, v.start_date
@@ -146,25 +196,12 @@ function _vacancy(connection, vacancyId){
 			name: vacancyData.name,
 			state_id: vacancyData.state_id,
 			vacancyStates: _vacancyStates(connection),
-			candidateStates: _candidateStates(connection),
+			candidateStates: _unionStates(connection),
 			start_date: vacancyData.start_date,
 			candidates: candidatesData
 		}
 	}
 	return null;
-}
-
-function _candidateStates(connection){
-	var query = "
-		select cs.id as payload, cs.name as text,
-		case
-			when cs.text_color = '' then '128,128,128'
-			when cs.text_color = 'black' then '68,68,68'
-			when cs.text_color <> '' then cs.text_color
-		end color
-		from candidate_states cs";
-	var recordSet = connection.Execute(query);
-	return __fetchData(recordSet);
 }
 
 function _candidateResume(connection, attachmentId){
@@ -222,14 +259,13 @@ function _candidate(connection, vacancyId, candidateId, objectId, serverId){
 			order by e.date desc";
 		var commentsRecordSet = connection.Execute(commentsQuery);
 		var commentsData = __fetchData(commentsRecordSet);
-		var candidateStates = _candidateStates(connection);
 		return {
 			id: candidateData.id,
 			fullname: candidateData.fullname,
 			state_id: candidateData.state_id,
 			attachment_id: _candidateAttachmentId(candidateData.attachments),
 			comments: commentsData,
-			states: candidateStates,
+			states: _unionStates(connection),
 			boss_state_id: _BOSS_COMMENT_TYPE
 		}
 	}
@@ -237,7 +273,7 @@ function _candidate(connection, vacancyId, candidateId, objectId, serverId){
 }
 
 function getAccess(){
-	return  wl.getResult({ access: true });
+	return wl.getResult({ access: true });
 }
 
 function getVacancies(queryObjects){
