@@ -1,9 +1,10 @@
 import { addServer, getAll } from  './servers';
 
-const routerId = '6385385939497347608';
+const routerId = '6389534413733780774';
 const customBaseUrl = process.env.NODE_ENV === 'production' ? '/custom_web_template.html' : 'http://study.merlion.ru/custom_web_template.html';
+console.log(process.env.NODE_ENV);
 
-addServer({ id: '6383951988069964446', name: 'Test' })
+addServer({ id: '6389535066983246105', name: 'Test' })
 .addActions(
 	[
 		'Access',

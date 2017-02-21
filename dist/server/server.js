@@ -3,11 +3,14 @@
 Server.Execute("include/user_init.html");
 
 
-var _USER = '0x4E3C33127FC024AF';  //'0x4FE3642B21CA0903' - тест; //0x4D6D286F215A332B
+//var _USER = '0x4E3C33127FC024AF';  //'0x4FE3642B21CA0903' - тест; //0x4D6D286F215A332B
+var _USER = '0x' + StrHexInt(curUserID);
 var _BOSS_COMMENT_TYPE = 'interview';
 
-DropFormsCache('x-local:/wt/web/common/wl_library.js');
-var wl = OpenCodeLib('x-local:/wt/web/common/wl_library.js');
+function __trimException(ex){
+	var inErr = Trim(ex);
+	return inErr.substr(0, inErr.indexOf('\r\n', 0));
+}
 
 function __isConnectOpen(connection){
 	return (connection != undefined && connection != null) && connection.state != null && connection.state != 0;
@@ -273,7 +276,7 @@ function _candidate(connection, vacancyId, candidateId, objectId, serverId){
 }
 
 function getAccess(){
-	return wl.getResult({ access: true });
+	return _toJSON({ access: true });
 }
 
 function getVacancies(queryObjects){
@@ -310,8 +313,8 @@ function getVacancies(queryObjects){
 			__closeConnect(connection);
 			connection = null;
 		}
-		return wl.getResult({
-			error: wl.trimException(e)
+		return _toJSON({
+			error: __trimException(e)
 		});
 	}
 }
@@ -333,8 +336,8 @@ function getVacancy(queryObjects){
 			__closeConnect(connection);
 			connection = null;
 		}
-		return wl.getResult({
-			error: wl.trimException(e)
+		return _toJSON({
+			error: __trimException(e)
 		});
 	}
 }
@@ -358,8 +361,8 @@ function getCandidate(queryObjects){
 			__closeConnect(connection);
 			connection = null;
 		}
-		return wl.getResult({
-			error: wl.trimException(e)
+		return _toJSON({
+			error: __trimException(e)
 		});
 	}
 }
@@ -485,9 +488,8 @@ function postUpdateBossCommentForCandidate(queryObjects){
 			connection = null;
 		}
 		return _toJSON({
-			error: wl.trimException(e)
+			error: __trimException(e)
 		});
-		alert(e);
 	}
 }
 

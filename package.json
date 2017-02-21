@@ -1,6 +1,6 @@
 {
-  "name": "boilerplate",
-  "description": "boilerplate",
+  "name": "estaff_vacancies",
+  "description": "estaff_vacancies",
   "author": "Author",
   "scripts": {
     "test": "mocha --compilers js:babel-core/register --require ./test/testHelper.js  --recursive",

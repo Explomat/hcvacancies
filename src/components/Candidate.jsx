@@ -5,18 +5,18 @@ import getDate from '../utils/getDate';
 import numDeclension from '../utils/numDeclension';
 import { isInStates } from '../utils/states';
 import config from '../config';
-import cx from 'classnames';
+// import cx from 'classnames';
 
-const Comment = ({ fullname, date, state_id, boss_state_id, comment, viewStates }) => {
+const Comment = ({ fullname, date, state_id, /* boss_state_id,*/ comment, viewStates }) => {
 	const statusText = isInStates(viewStates, state_id) ? viewStates[state_id].text : 'Нет статуса';
-	const isBoss = state_id === boss_state_id;
+	/* const isBoss = state_id === boss_state_id;
 	const classes = cx({
 		'comment': true,
 		'comment--boss': isBoss
 	});
-	const name = isBoss ? 'Ваш комментарий' : fullname;
+	const name = isBoss ? 'Ваш комментарий' : fullname;*/
 	return (
-		<div className={classes}>
+		<div className='comment'>
 			<div className='comment__avatar'>
 				<i className='icon-user' />
 			</div>
@@ -25,7 +25,7 @@ const Comment = ({ fullname, date, state_id, boss_state_id, comment, viewStates 
 					<span className='comment__post-status'>{statusText}</span>
 					<span className='bullet'>•</span>
 					<span className='comment__post-date'>{getDate(date)}</span>
-					<div className='comment__post-author'>{name}</div>
+					<div className='comment__post-author'>{fullname}</div>
 				</div>
 				<div className='comment__post-body' dangerouslySetInnerHTML={{ __html: comment }} />
 			</div>
@@ -168,7 +168,7 @@ class Candidate extends Component {
 						</a>
 					</span>
 				</div>
-				<div className='candidate__boss-is-comment'>{this.renderAddNewBossComment()}</div>
+				{/* <div className='candidate__boss-is-comment'>{this.renderAddNewBossComment()}</div>*/}
 				{/* <div className='candidate__boss-is-comment'>
 					{!bossComment && this.renderAddNewBossComment()}
 					{bossComment && this.renderBossComment(bossComment)}
