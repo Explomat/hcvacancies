@@ -161,7 +161,6 @@ class Candidate extends Component {
 					<span className='candidate__field-value'>
 						<a
 							href={config.url.createPath({ action_name: 'CandidateResume', server_name: 'Test', attachment_id })}
-							onClick={e => e.preventDefault()}
 						>
 							<span>Скачать </span>
 							<i className='icon-file-archive'/>

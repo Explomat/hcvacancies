@@ -87,9 +87,13 @@
 					    word-break: break-all;
 					}
 				}
-				.vacancies__status, .vacancies__date{
-					font-size: 14px;
+				.vacancies__status{
+					font-size: 13px;
     				color: #999;
+				}
+				.vacancies__date{
+					font-size: 14px;
+					color: #999;
 				}
 				.vacancies__status{
 				    padding: 3px;

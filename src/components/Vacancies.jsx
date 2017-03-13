@@ -25,14 +25,14 @@ class Vacancy extends Component {
 			<div className='vacancies__vacancy'>
 				<Link onClick={this.handleVacancyClick} to={`vacancy/${id}`} className='no-link vacancies__link'>
 					<div className='vacancies__title'>{name}</div>
+					<span className='vacancies__date'>{getDate(start_date)}</span>
+					<span className='bullet'>•</span>
 					<span
 						className='vacancies__status'
 						style={inlineStyles}
 					>
 						{text}
 					</span>
-					<span className='bullet'>•</span>
-					<span className='vacancies__date'>{getDate(start_date)}</span>
 					<span className='vacancies__additional'>
 						<span className='vacancies__candidates-count'>
 							<i className='icon-user vacancies__candidates-icon' />
