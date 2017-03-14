@@ -1,6 +1,8 @@
 const logger = store => next => action => {
-	console.log('dispatching', action);
-	console.log('next state', store.getState());
+	if (process.env.NODE_ENV === 'development') {
+		console.log('dispatching', action);
+		console.log('next state', store.getState());
+	}
 	return next(action);
 };
 

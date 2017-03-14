@@ -4,7 +4,12 @@ Server.Execute("include/user_init.html");
 
 
 //var _USER = '0x4E3C33127FC024AF';  //'0x4FE3642B21CA0903' - тест; //0x4D6D286F215A332B
-var _USER = '0x' + StrHexInt(curUserID);
+//var _USER_CODE =  '0x' + StrHexInt(5815489128889275124);
+var _USER_CODE = '';
+try {
+	_USER_CODE = String(OpenDoc(UrlFromDocID(5645249129435301872)).TopElem.code);
+	//_USER_CODE = String(OpenDoc(UrlFromDocID(5916491690073861220)).TopElem.code);
+} catch(e){}
 var _BOSS_COMMENT_TYPE = 'interview';
 
 function __trimException(ex){
@@ -24,7 +29,8 @@ function __closeConnect(connection){
 
 function __connect(){
 	var newConnect = new ActiveXObject("ADODB.Connection");
-	newConnect.Open("Driver={SQL Server};Server=supsql;Database=Estaff;Uid=edu;password=Qwer12345");
+	newConnect.Open("Driver={SQL Server};Server=cls-0042\\sdo, 61275;Database=estaffdb;Uid=estaff_reader;Pwd=9Zby6ZJZUfVT;");
+	//newConnect.Open("Driver={SQL Server};Server=supsql;Database=Estaff;Uid=edu;password=Qwer12345");
 	return newConnect;
 }
 
@@ -51,7 +57,7 @@ function _toJSON(obj){
 	return tools.object_to_text(obj, 'json');
 }
 
-function _vacanciesCount(connection, userHexId, search, states, limitRows){
+function _vacanciesCount(connection, userCode, search, states, limitRows){
 	var query = "
 		select 
 		COUNT(*)/"+limitRows+" pages_count,
@@ -62,9 +68,9 @@ function _vacanciesCount(connection, userHexId, search, states, limitRows){
 	where 
 		vacancies.name LIKE '%" + search + "%'
 				and vacancies.state_id in ('" + states + "')
-				and p.eid is not null
-				and p.eid <> ''
-				and p.eid = '" + userHexId + "'";
+				and p.code is not null
+				and p.code <> ''
+				and p.code = '" + userCode + "'";
 	var recordSet = connection.Execute(query);
 	return __fetchData(recordSet)[0];
 }
@@ -134,7 +140,7 @@ function _unionStates(connection){
 	return __fetchData(recordSet);
 }
 
-function _vacancies(connection, userHexId, search, page, states, order, limitRows){
+function _vacancies(connection, userCode, search, page, states, order, limitRows){
 	var orders = order.split(':');
 	var query = "
 	select
@@ -162,12 +168,13 @@ function _vacancies(connection, userHexId, search, page, states, order, limitRow
 			where 
 				vacancies.name LIKE '%" + search + "%'
 				and vacancies.state_id in ('" + states + "')
-				and p.eid is not null
-				and p.eid <> ''
-				and p.eid = '" + userHexId + "'
+				and p.code is not null
+				and p.code <> ''
+				and p.code = '" + userCode + "'
 		) v
 		where 
-			v.rowNum > " + page * limitRows;
+			v.rowNum > " + page * limitRows + "
+			order by v." + orders[0] + " " + orders[1];
 	var recordSet = connection.Execute(query);
 	return __fetchData(recordSet);
 }
@@ -181,17 +188,25 @@ function _vacancy(connection, vacancyId){
 	var vacancyData = __fetchData(vacancyRecordSet)[0];
 	if (vacancyData != undefined){
 		var candidatesQuery = "
-			select c.id, c.fullname, c.state_id, 
-			(select COUNT(e.id) 
-				from events e 
-				where e.candidate_id = c.id 
-				and e.vacancy_id = " + vacancyData.id  + "
-			)as comments_count 
-			from candidates c 
-			where c.id in 
-			(select DISTINCT(e.candidate_id) from events e 
-			where e.vacancy_id = " + vacancyData.id + ")
-			order by c.state_id";
+			select 
+				c.id,
+				c.fullname,
+				c.state_id,
+				MAX(e.date) date,
+				(select COUNT(e.id) 
+					from events e 
+					where e.candidate_id = c.id 
+					and e.vacancy_id = "+ vacancyData.id +"
+				) as comments_count 
+
+				from candidates c 
+
+				inner join events e on e.candidate_id = c.id 
+				where c.id in 
+					(select DISTINCT(e.candidate_id) from events e 
+					where e.vacancy_id = "+ vacancyData.id +") 
+				group by c.id, c.fullname, c.state_id 
+				order by date desc";
 		var candidatesRecordSet = connection.Execute(candidatesQuery);
 		var candidatesData = __fetchData(candidatesRecordSet);
 		return {
@@ -245,6 +260,7 @@ function _candidate(connection, vacancyId, candidateId, objectId, serverId){
 		select c.id, c.fullname, c.state_id, c.attachments 
 		from candidates c
 		where c.id = " + candidateId;
+	
 	var candidateRecordSet = connection.Execute(candidateQuery);
 	var candidateData = __fetchData(candidateRecordSet)[0];
 	if (candidateData != undefined){
@@ -297,10 +313,10 @@ function getVacancies(queryObjects){
 		var order = queryObjects.HasProperty('order') ? queryObjects.order : 'start_date:desc';
 		var limitRows = queryObjects.HasProperty('limit_rows') ? Int(queryObjects.limit_rows) : DEFAULT_LIMIT_ROWS;
 		
-		var vacanciesCount = _vacanciesCount(connection, _USER, search, states, limitRows);
+		var vacanciesCount = _vacanciesCount(connection, _USER_CODE, search, states, limitRows);
 		//var vc = _vacancies(connection, search, page, status, orderedByTitle, orderedByStatus, limitRows);
 		//alert('vacancies: ' + _toJSON(vc));
-		var vs = _vacancies(connection, _USER, search, page, states, order, limitRows);
+		var vs = _vacancies(connection, _USER_CODE, search, page, states, order, limitRows);
 		//alert('vacancies: ' + _toJSON(vs));
 		return _toJSON({
 			vacancies: vs,
