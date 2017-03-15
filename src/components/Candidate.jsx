@@ -132,10 +132,10 @@ class Candidate extends Component {
 	
 	render(){
 		const {
+			id,
 			fullname,
 			state_id,
 			boss_state_id,
-			attachment_id,
 			comments,
 			dateResponse,
 			dateInterview,
@@ -157,21 +157,21 @@ class Candidate extends Component {
 					<span className='candidate__field-value'>{getDate(dateInterview)}</span>
 					<span className='candidate__field-label'>Дата приглашения</span>
 					<span className='candidate__field-value'>{getDate(dateInvitation)}</span>
-					{attachment_id && <span>
+					<span>
 						<span className='candidate__field-label'>Резюме</span>
 						<span className='candidate__field-value'>
 							<a
 								href={config.url.createPath({
 									action_name: 'CandidateResume',
 									server_name: 'Test',
-									attachment_id
+									candidate_id: id
 								})}
 							>
 								<span>Скачать </span>
 								<i className='icon-file-archive'/>
 							</a>
 						</span>
-					</span>}
+					</span>
 				</div>
 				{/* <div className='candidate__boss-is-comment'>{this.renderAddNewBossComment()}</div>*/}
 				{/* <div className='candidate__boss-is-comment'>

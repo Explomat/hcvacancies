@@ -7,8 +7,8 @@ Server.Execute("include/user_init.html");
 //var _USER_CODE =  '0x' + StrHexInt(5815489128889275124);
 var _USER_CODE = '';
 try {
-	_USER_CODE = String(OpenDoc(UrlFromDocID(5645249129435301872)).TopElem.code);
-	//_USER_CODE = String(OpenDoc(UrlFromDocID(5916491690073861220)).TopElem.code);
+	//_USER_CODE = String(OpenDoc(UrlFromDocID(5645249129435301872)).TopElem.code);
+	_USER_CODE = String(OpenDoc(UrlFromDocID(5916491690073861220)).TopElem.code);
 } catch(e){}
 var _BOSS_COMMENT_TYPE = 'interview';
 
@@ -29,8 +29,8 @@ function __closeConnect(connection){
 
 function __connect(){
 	var newConnect = new ActiveXObject("ADODB.Connection");
-	newConnect.Open("Driver={SQL Server};Server=cls-0042\\sdo, 61275;Database=estaffdb;Uid=estaff_reader;Pwd=9Zby6ZJZUfVT;");
-	//newConnect.Open("Driver={SQL Server};Server=supsql;Database=Estaff;Uid=edu;password=Qwer12345");
+	//newConnect.Open("Driver={SQL Server};Server=cls-0042\\sdo, 61275;Database=estaffdb;Uid=estaff_reader;Pwd=9Zby6ZJZUfVT;");
+	newConnect.Open("Driver={SQL Server};Server=supsql;Database=Estaff;Uid=edu;password=Qwer12345");
 	return newConnect;
 }
 
@@ -72,7 +72,7 @@ function _vacanciesCount(connection, userCode, search, states, limitRows){
 				and p.code <> ''
 				and p.code = '" + userCode + "'";
 	var recordSet = connection.Execute(query);
-	return __fetchData(recordSet)[0];
+	return ArrayOptFirstElem(__fetchData(recordSet));
 }
 
 function _vacancyStates(connection){
@@ -185,7 +185,7 @@ function _vacancy(connection, vacancyId){
 		from vacancies v 
 		where v.id = " + vacancyId;
 	var vacancyRecordSet = connection.Execute(vacancyQuery);
-	var vacancyData = __fetchData(vacancyRecordSet)[0];
+	var vacancyData = ArrayOptFirstElem(__fetchData(vacancyRecordSet));
 	if (vacancyData != undefined){
 		var candidatesQuery = "
 			select 
@@ -222,17 +222,11 @@ function _vacancy(connection, vacancyId){
 	return null;
 }
 
-function _candidateResume(connection, attachmentId){
-	var query = "select lf.data from [(spxml_large_fields)] lf where lf.id = " + attachmentId;
-	var recordSet = connection.Execute(query);
-	return __fetchData(recordSet)[0];
-}
-
-function _candidate(connection, vacancyId, candidateId, objectId, serverId){
+function _candidateResume(connection, candidateId){
 	
-	function _candidateAttachmentId(attachmentsStr){
+	function _candidateAttachment(attachmentsStr){
 		
-		function selectByKey(arr, key, value){
+		/*function selectByKey(arr, key, value){
 			var outArr = [];
 			for (elem in arr){
 				if ((el = elem.OptChild(key)) != undefined && el.Value == value){
@@ -240,15 +234,33 @@ function _candidate(connection, vacancyId, candidateId, objectId, serverId){
 				}
 			}
 			return outArr;
-		}
+		}*/
 		
 		try {
 			var doc = OpenDocFromStr('<root>' + attachmentsStr + '</root>');
-			var resumeTypedAttaches = selectByKey(doc.TopElem.attachments, "type_id", "resume");
+			//var resumeTypedAttaches = selectByKey(doc.TopElem.attachments, "type_id", "resume");
+			var resumeTypedAttaches = ArraySelectAll(doc.TopElem.attachments);
 			var len = resumeTypedAttaches.length;
 			if (len > 0){
-				var elem = resumeTypedAttaches[len - 1].text.OptAttrValue("EXT-OBJECT-ID", 'null');
-				return elem == 'null' ? null : Int(elem);
+				var el = resumeTypedAttaches[len - 1];
+				var child = el.OptChild('text');
+				if (child != undefined) {
+					var id = child.OptAttrValue("EXT-OBJECT-ID", '');
+					return id == null ? id : {
+						id: Int(id),
+						contentType: String(el.content_type),
+						filename: el.OptChild('file_name') == undefined ? 'resume.html' : String(el.OptChild('file_name'))
+					};
+				}
+				else if ((child = el.OptChild('data')) != undefined) {
+					var id = child.OptAttrValue("EXT-OBJECT-ID", '');
+					return id == null ? id : {
+						id: Int(id),
+						contentType: String(el.content_type),
+						filename: el.OptChild('file_name') == undefined ? 'resume.doc' : String(el.OptChild('file_name'))
+					};
+				}
+				return null;
 			}
 		} catch(e){
 			return null;
@@ -257,12 +269,39 @@ function _candidate(connection, vacancyId, candidateId, objectId, serverId){
 	}
 	
 	var candidateQuery = "
-		select c.id, c.fullname, c.state_id, c.attachments 
+		select c.attachments 
 		from candidates c
 		where c.id = " + candidateId;
 	
 	var candidateRecordSet = connection.Execute(candidateQuery);
-	var candidateData = __fetchData(candidateRecordSet)[0];
+	var candidateData = ArrayOptFirstElem(__fetchData(candidateRecordSet));
+	if (candidateData != undefined){
+		var attachment = _candidateAttachment(candidateData.attachments);
+		if (attachment != null){
+			var query = "select lf.data from [(spxml_large_fields)] lf where lf.id = " + attachment.id;
+			var recordSet = connection.Execute(query);
+			var rdata = ArrayOptFirstElem(__fetchData(recordSet));
+			if (rdata != undefined){
+				return {
+					data: rdata.data,
+					contentType: attachment.contentType,
+					filename: attachment.filename
+				}
+			}
+		}
+	}
+	return null;
+}
+
+function _candidate(connection, vacancyId, candidateId, objectId, serverId){
+	
+	var candidateQuery = "
+		select c.id, c.fullname, c.state_id
+		from candidates c
+		where c.id = " + candidateId;
+	
+	var candidateRecordSet = connection.Execute(candidateQuery);
+	var candidateData = ArrayOptFirstElem(__fetchData(candidateRecordSet));
 	if (candidateData != undefined){
 		var commentsQuery = "
 			select e.id, u.fullname, e.date, e.comment,
@@ -282,7 +321,6 @@ function _candidate(connection, vacancyId, candidateId, objectId, serverId){
 			id: candidateData.id,
 			fullname: candidateData.fullname,
 			state_id: candidateData.state_id,
-			attachment_id: _candidateAttachmentId(candidateData.attachments),
 			comments: commentsData,
 			states: _unionStates(connection),
 			boss_state_id: _BOSS_COMMENT_TYPE
@@ -384,18 +422,18 @@ function getCandidate(queryObjects){
 }
 
 function getCandidateResume(queryObjects){
-	var attachmentId = queryObjects.HasProperty('attachment_id') ? queryObjects.attachment_id : null;
+	var candidateId = queryObjects.HasProperty('candidate_id') ? queryObjects.candidate_id : null;
 	var connection = null;
 	try {
-		if (attachmentId == null){
+		if (candidateId == null){
 			throw "Неверные входные данные!";
 		}
 		connection = __connect();
-		var resume = _candidateResume(connection, attachmentId);
+		var resume = _candidateResume(connection, candidateId);
 		
-		if (resume != undefined){
-			Request.RespContentType = 'text/html';
-			Request.AddRespHeader("Content-Disposition","attachment; filename=resume.html");
+		if (resume != null){
+			Request.RespContentType = resume.contentType;
+			Request.AddRespHeader("Content-Disposition","attachment; filename=" + resume.filename);
 			return resume.data;
 		}
 	} catch(e){
