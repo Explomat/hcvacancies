@@ -5,6 +5,7 @@ import getDate from '../utils/getDate';
 import numDeclension from '../utils/numDeclension';
 import { isInStates } from '../utils/states';
 import config from '../config';
+// import filter from 'lodash/filter';
 // import cx from 'classnames';
 
 const Comment = ({ fullname, date, state_id, /* boss_state_id,*/ comment, viewStates }) => {
@@ -38,7 +39,7 @@ class Candidate extends Component {
 	constructor(props){
 		super(props);
 		
-		this.renderAddNewBossComment = this.renderAddNewBossComment.bind(this);
+		// this.renderAddNewBossComment = this.renderAddNewBossComment.bind(this);
 		// this.renderBossComment = this.renderBossComment.bind(this);
 		this.handleEditBossPost = this.handleEditBossPost.bind(this);
 		// this._getComments = this._getComments.bind(this);
@@ -61,27 +62,11 @@ class Candidate extends Component {
 			}
 			return isEq;
 		});
-		console.log(bossComment, commentsWithoutBoss);
 		return {
 			comments: commentsWithoutBoss,
 			bossComment
 		};
 	}*/
-	
-	renderAddNewBossComment(){
-		const { isFetchingBossPost } = this.props;
-		return (
-			<div className='candidate__boss-comment-container'>
-				<TextAreaView ref='bossComment' placeholder='Добавьте комментарий'/>
-				<ButtonPrimary
-					onClick={this.handleEditBossPost}
-					text='Добавить'
-					className='candidate__boss-comment-submit'
-					loading={isFetchingBossPost}
-				/>
-			</div>
-		);
-	}
 	
 /*	renderBossComment(bossComment){
 		const { isEditBossPost, isFetchingBossPost } = this.props;
@@ -136,11 +121,12 @@ class Candidate extends Component {
 			fullname,
 			state_id,
 			boss_state_id,
-			comments,
 			dateResponse,
 			dateInterview,
 			dateInvitation,
-			viewStates
+			viewStates,
+			comments,
+			isFetchingBossPost
 		} = this.props;
 		const statusText = isInStates(viewStates, state_id) ? viewStates[state_id].text : 'Нет статуса';
 		// const { comments, bossComment } = this._getComments();
@@ -173,11 +159,17 @@ class Candidate extends Component {
 						</span>
 					</span>
 				</div>
-				{/* <div className='candidate__boss-is-comment'>{this.renderAddNewBossComment()}</div>*/}
-				{/* <div className='candidate__boss-is-comment'>
-					{!bossComment && this.renderAddNewBossComment()}
-					{bossComment && this.renderBossComment(bossComment)}
-				</div>*/}
+				<div className='candidate__boss-is-comment'>
+					<div className='candidate__boss-comment-container'>
+						<TextAreaView ref='bossComment' placeholder='Добавьте комментарий'/>
+						<ButtonPrimary
+							onClick={this.handleEditBossPost}
+							text='Добавить'
+							className='candidate__boss-comment-submit'
+							loading={isFetchingBossPost}
+						/>
+					</div>
+				</div>
 				<div className='candidate__comments'>
 					<div className='candidate__comments-title'>
 						<span>{commentsLen} </span>

@@ -7,10 +7,17 @@ Server.Execute("include/user_init.html");
 //var _USER_CODE =  '0x' + StrHexInt(5815489128889275124);
 var _USER_CODE = '';
 try {
-	//_USER_CODE = String(OpenDoc(UrlFromDocID(5645249129435301872)).TopElem.code);
-	_USER_CODE = String(OpenDoc(UrlFromDocID(5916491690073861220)).TopElem.code);
+	_USER_CODE = String(OpenDoc(UrlFromDocID(5645249129435301872)).TopElem.code);
+	//_USER_CODE = String(OpenDoc(UrlFromDocID(5916491690073861220)).TopElem.code);
 } catch(e){}
-var _BOSS_COMMENT_TYPE = 'interview';
+var _BOSS_COMMENT_TYPE = 'wl_event_type_15';
+
+function wlAlert(text) {
+	var logs = OpenDoc(UrlFromDocID(6392062311857807399));
+	var textResult = logs.TopElem.html + text + "\r\n";
+	logs.TopElem.html = textResult;
+	logs.Save();
+}
 
 function __trimException(ex){
 	var inErr = Trim(ex);
@@ -29,8 +36,8 @@ function __closeConnect(connection){
 
 function __connect(){
 	var newConnect = new ActiveXObject("ADODB.Connection");
-	//newConnect.Open("Driver={SQL Server};Server=cls-0042\\sdo, 61275;Database=estaffdb;Uid=estaff_reader;Pwd=9Zby6ZJZUfVT;");
-	newConnect.Open("Driver={SQL Server};Server=supsql;Database=Estaff;Uid=edu;password=Qwer12345");
+	//newConnect.Open("Driver={SQL Server};Server=supsql;Database=Estaff;Uid=edu;password=Qwer12345");
+	newConnect.Open("Driver={SQL Server};Server=cls-0042\\sdo, 61275;Database=estaffdb;Uid=estaff_reader;Pwd=9Zby6ZJZUfVT;");
 	return newConnect;
 }
 
@@ -55,6 +62,14 @@ function __fetchData(recordSet){
 
 function _toJSON(obj){
 	return tools.object_to_text(obj, 'json');
+}
+
+function _personIdByCodeFromEstaff(){
+	var query = "
+		select p.id from persons p
+		where p.code = '" + _USER_CODE + "'";
+	var recordSet = connection.Execute(query);
+	return ArrayOptFirstElem(__fetchData(recordSet));
 }
 
 function _vacanciesCount(connection, userCode, search, states, limitRows){
@@ -459,8 +474,17 @@ function postUpdateBossCommentForCandidate(queryObjects){
 			throw "Неверные входные данные!";
 		}
 		connection = __connect();
+		var person = _personIdByCodeFromEstaff();
+		
+		if (person == undefined){
+			throw "Не найден ответственный в Estaff!";
+		}
+		if (comment == null){
+			throw "Комментарий не должен быть пустым!"
+		}
+		wlAlert('\r\nperson: ' + person.id);
 		//connection.BeginTrans();
-		var query = "
+		/*var query = "
 			declare @max_id bigint = (select MAX(id) + 1 from events)
 			declare @cur_date datetime = GETDATE()
 			insert into events (
@@ -529,11 +553,50 @@ function postUpdateBossCommentForCandidate(queryObjects){
 				'',
 				''
 			)
-		"
+		"*/
+		var query = "
+			declare @max_id bigint = (select MAX(id) + 1 from events)
+			declare @cur_date datetime = GETDATE()
+			insert into events (
+				id,
+				type_id,
+				is_derived,
+				is_calendar_entry,
+				date,
+				occurrence_id,
+				use_reminder,
+				comment,
+				is_shared_comment,
+				user_id,
+				creation_date,
+				last_mod_date,
+				candidate_id,
+				vacancy_id
+			)
+			values(
+				@max_id,
+				'"+ _BOSS_COMMENT_TYPE +"',
+				0,
+				1,
+				@cur_date,
+				'',
+				0,
+				'"+ comment +"',
+				1,
+				"+ person.id +",
+				@cur_date,
+				@cur_date,
+				" + candidateId + ",
+				" + vacancyId + "
+			)
+		";
+		
+		wlAlert('\r\nQuery: ' + query);
 		connection.Execute(query);
 		//connection.CommitTrans();
 		
 		var candidate = _candidate(connection, vacancyId, candidateId, objectId, serverId);
+		wlAlert('\r\ncandidate: ' + _toJSON(candidate));
 		return _toJSON(candidate);
 	} catch (e){
 		if (connection != null){

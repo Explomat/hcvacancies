@@ -51,6 +51,7 @@ $fontSizeXs: 12px;
     }
 
     .textarea-box__label {
+    	display: inline-block;
         font-size: 1rem;
         font-family: sans-serif;
         margin-top: 20px;
@@ -100,6 +101,7 @@ $fontSizeXs: 12px;
 }
 
 @mixin input-box__label {
+	display: inline-block;
     font-size: 1rem;
     font-family: sans-serif;
     margin-top: 30px;
