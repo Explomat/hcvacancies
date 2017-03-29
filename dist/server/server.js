@@ -2,21 +2,25 @@
 
 Server.Execute("include/user_init.html");
 
+var CONN_STRING = "Driver={SQL Server};Server=cls-0042\\sdo, 61275;Database=estaffdb;Uid=estaff_reader;Pwd=9Zby6ZJZUfVT;";
+//var CONN_STRING = "Driver={SQL Server};Server=supsql;Database=Estaff;Uid=edu;password=Qwer12345";
 
-//var _USER = '0x4E3C33127FC024AF';  //'0x4FE3642B21CA0903' - тест; //0x4D6D286F215A332B
-//var _USER_CODE =  '0x' + StrHexInt(5815489128889275124);
 var _USER_CODE = '';
 try {
 	_USER_CODE = String(OpenDoc(UrlFromDocID(5645249129435301872)).TopElem.code);
-	//_USER_CODE = String(OpenDoc(UrlFromDocID(5916491690073861220)).TopElem.code);
+	//_USER_CODE = String(OpenDoc(UrlFromDocID(5885323940457966974)).TopElem.code); // 5885323940457966974 5916491690073861220
 } catch(e){}
 var _BOSS_COMMENT_TYPE = 'wl_event_type_15';
 
-function wlAlert(text) {
+/* function wlAlert(text) {
 	var logs = OpenDoc(UrlFromDocID(6392062311857807399));
 	var textResult = logs.TopElem.html + text + "\r\n";
 	logs.TopElem.html = textResult;
 	logs.Save();
+}*/
+
+function _toJSON(obj){
+	return tools.object_to_text(obj, 'json');
 }
 
 function __trimException(ex){
@@ -36,8 +40,7 @@ function __closeConnect(connection){
 
 function __connect(){
 	var newConnect = new ActiveXObject("ADODB.Connection");
-	//newConnect.Open("Driver={SQL Server};Server=supsql;Database=Estaff;Uid=edu;password=Qwer12345");
-	newConnect.Open("Driver={SQL Server};Server=cls-0042\\sdo, 61275;Database=estaffdb;Uid=estaff_reader;Pwd=9Zby6ZJZUfVT;");
+	newConnect.Open(CONN_STRING);
 	return newConnect;
 }
 
@@ -60,9 +63,7 @@ function __fetchData(recordSet){
 	return arrResult;
 }
 
-function _toJSON(obj){
-	return tools.object_to_text(obj, 'json');
-}
+
 
 function _personIdByCodeFromEstaff(){
 	var query = "
@@ -237,6 +238,41 @@ function _vacancy(connection, vacancyId){
 	return null;
 }
 
+function _isBossVacancy(connection, vacancyId){
+	var query = "
+		select v.id
+	from 
+		vacancies v
+	inner join persons p on p.id = v.rr_persons.value('(rr_persons/rr_person/person_id)[1]','varchar(20)') 
+	where 
+		p.code = '" + _USER_CODE + "' 
+	and
+		v.id = " + vacancyId;
+	var recordSet = connection.Execute(query);
+	return ArrayOptFirstElem(__fetchData(recordSet)) !== undefined;
+}
+
+function _isBossCandidate(connection, vacancyId, candidateId){
+	var query = "
+		select c.id
+	from
+		candidates c
+	CROSS APPLY 
+		c.spots.nodes('/spots/spot') as R(cmp)
+	inner join 
+		vacancies v on v.id = cmp.value('vacancy_id[1]', 'varchar(20)')
+	inner join 
+		persons p on p.id = v.rr_persons.value('(rr_persons/rr_person/person_id)[1]','varchar(20)')
+	where 
+		c.id = " + candidateId + "
+	and 
+		cmp.value('vacancy_id[1]', 'varchar(20)') = '" + vacancyId + "'
+	and 
+		p.code = '" + _USER_CODE + "'";
+	var recordSet = connection.Execute(query);
+	return ArrayOptFirstElem(__fetchData(recordSet)) !== undefined;
+}
+
 function _candidateResume(connection, candidateId){
 	
 	function _candidateAttachment(attachmentsStr){
@@ -310,10 +346,17 @@ function _candidateResume(connection, candidateId){
 
 function _candidate(connection, vacancyId, candidateId, objectId, serverId){
 	
+	if (_isBossCandidate(connection, vacancyId, candidateId) == false){
+		return null;
+	}
+	
+	//запрос дополнительно проверяет, что кандидат относится к текущей вакансии
 	var candidateQuery = "
 		select c.id, c.fullname, c.state_id
-		from candidates c
-		where c.id = " + candidateId;
+		from candidates c 
+		CROSS APPLY c.spots.nodes('/spots/spot') as R(cmp) 
+		where c.id = " + candidateId + " 
+		and cmp.value('vacancy_id[1]', 'varchar(100)') = '" + vacancyId + "'"
 	
 	var candidateRecordSet = connection.Execute(candidateQuery);
 	var candidateData = ArrayOptFirstElem(__fetchData(candidateRecordSet));
@@ -344,8 +387,20 @@ function _candidate(connection, vacancyId, candidateId, objectId, serverId){
 	return null;
 }
 
+function _isBoss(){
+	return ArrayOptFirstElem(XQuery("sql: select fm.id from func_managers fm where fm.person_id = " + curUserID)) !== undefined;
+}
+
 function getAccess(){
-	return _toJSON({ access: true });
+	var isBoss = false;
+	
+	try {
+		isBoss = _isBoss();
+	} catch(e){
+		return _toJSON({ access: false, error: __trimException(e) });
+	}
+	
+	return _toJSON({ access: isBoss });
 }
 
 function getVacancies(queryObjects){
@@ -397,6 +452,11 @@ function getVacancy(queryObjects){
 			throw "Неверные входные данные!";
 		}
 		connection = __connect();
+		
+		if (!_isBossVacancy(connection, vacancyId)) {
+			throw "Такой вакансии не существует!";
+		}
+		
 		var vacancy = _vacancy(connection, vacancyId);
 		return _toJSON(vacancy);
 		//alert(_toJSON(vacancy));
@@ -424,6 +484,9 @@ function getCandidate(queryObjects){
 		}
 		connection = __connect();
 		var candidate = _candidate(connection, vacancyId, candidateId, objectId, serverId);
+		if (candidate == null){
+			throw "Не найден кандидат!"
+		}
 		return _toJSON(candidate);
 	} catch (e){
 		if (connection != null){
@@ -482,7 +545,7 @@ function postUpdateBossCommentForCandidate(queryObjects){
 		if (comment == null){
 			throw "Комментарий не должен быть пустым!"
 		}
-		wlAlert('\r\nperson: ' + person.id);
+		//wlAlert('\r\nperson: ' + person.id);
 		//connection.BeginTrans();
 		/*var query = "
 			declare @max_id bigint = (select MAX(id) + 1 from events)
@@ -591,12 +654,15 @@ function postUpdateBossCommentForCandidate(queryObjects){
 			)
 		";
 		
-		wlAlert('\r\nQuery: ' + query);
+		//wlAlert('\r\nQuery: ' + query);
 		connection.Execute(query);
 		//connection.CommitTrans();
 		
 		var candidate = _candidate(connection, vacancyId, candidateId, objectId, serverId);
-		wlAlert('\r\ncandidate: ' + _toJSON(candidate));
+		if (candidate == null){
+			throw "Не найден кандидат!"
+		}
+		//wlAlert('\r\ncandidate: ' + _toJSON(candidate));
 		return _toJSON(candidate);
 	} catch (e){
 		if (connection != null){
