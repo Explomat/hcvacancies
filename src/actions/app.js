@@ -149,7 +149,7 @@ export function getVacanciesOnScroll(search, page, state_id, order){
 
 export function editBossPost(vacancyId, candidateId, comment){
 	return dispatch => {
-		if (!comment){
+		if (!(comment || '').trim()){
 			dispatch(error('Комментарий не должен быть пустым!'));
 			return;
 		}
